@@ -207,6 +207,8 @@ class ConexCC:
             else:
                 print('Moving to position %.3f mm' % new_pos)
 
+# added by TKM, 13 May 2021
+# include zero and definable (absolute) home position 
     def go_to_zero(self):
         if self.is_ready():
             err_str = ''

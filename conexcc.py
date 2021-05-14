@@ -16,7 +16,7 @@ MAX_VELOCITY = 0.4     # mm/s, by spec of NewPort TRA25CC DC Servo Motor
 
 class ConexCC:
 
-    def __init__(self, com_port, velocity):
+    def __init__(self, com_port, velocity=0.4):
         self.min_limit = -1
         self.max_limit = -1
         self.cur_pos = -1
@@ -27,16 +27,17 @@ class ConexCC:
         self.driver = CommandInterfaceConexCC.ConexCC()
         ret = self.driver.OpenInstrument(com_port)
         if ret != 0:
-            print('Oops: error opening port %s' % com_port)
+            print('Error opening port %s' % com_port)
             self.positioner_error = 'init failed'
         else:
-            print('ConexCC: Successfully connected to %s' % com_port)
-            self.read_velocity()
-            self.set_velocity(velocity)
-            self.set_homing_velocity(velocity)
-            self.read_limits()
-            self.read_cur_pos()
-            print('Default home position = %.3f mm' % self.home_position)
+            print('Connected to %s' % com_port)
+            self.init_positioner()
+            # self.read_velocity()
+            # self.set_velocity(velocity)
+            # self.set_homing_velocity(velocity)
+            # self.read_limits()
+            # self.read_cur_pos()
+            # print('Default home position = %.3f mm' % self.home_position)
 
     def wait_for_ready(self, timeout=60):
         print('waiting for ready state...', end='')
@@ -129,6 +130,17 @@ class ConexCC:
             print('Current Position = %.3f' % resp)
             self.cur_pos = resp
 
+    def return_cur_pos(self):
+        err_str = ''
+        resp = 0
+        res, resp, err_str = self.driver.TP(DEV, resp, err_str)
+        if res != 0 or err_str != '':
+            print('Error returning current position. result = %d, response = %.2f, errString=\'%s\'' % (res, resp, err_str))
+        else:
+            # print('Current Position = %.3f' % resp)
+            self.cur_pos = resp
+            return resp
+
     def read_velocity(self):
         err_str = ''
         resp = 0
@@ -165,9 +177,9 @@ class ConexCC:
         err_str = ''
         res, err_str = self.driver.OR(DEV, err_str)
         if res != 0 or err_str != '':
-            print('Oops: Find Home: result=%d,errString=\'%s\'' % (res, err_str))
+            print('Error initializing positioner. Result=%d, errString=\'%s\'' % (res, err_str))
         else:
-            print('Finding Home')
+            print('Positioner initialized.')
 
     def set_homing_velocity(self, velocity):
         if velocity > MAX_VELOCITY:
@@ -196,7 +208,10 @@ class ConexCC:
             if res != 0 or err_str != '':
                 print('Oops: Move Relative: result=%d,errString=\'%s\'' % (res, err_str))
             else:
-                print('Moving Relative %.3f mm' % distance)
+                if distance > 0:
+                    print('Moving up %.3f mm' % distance)
+                elif distance < 0 :
+                    print('Moving down %.3f mm' % -distance)
 
     def move_absolute(self, new_pos):
         if self.is_ready():
@@ -205,22 +220,26 @@ class ConexCC:
             if res != 0 or err_str != '':
                 print('Oops: Move Absolute: result=%d,errString=\'%s\'' % (res, err_str))
             else:
-                print('Moving to position %.3f mm' % new_pos)
+                print('Moving to %.3f mm' % new_pos)
 
 # added by TKM, 13 May 2021
-# include zero and definable (absolute) home position 
+# include zero and definable (absolute) home position
     def go_to_zero(self):
         if self.is_ready():
             err_str = ''
             res, err_str = self.driver.PA_Set(DEV, 0, err_str)
             if res != 0 or err_str != '':
                 print('Oops: Move Absolute: result=%d,errString=\'%s\'' % (res, err_str))
-            else:
-                print('Moving to zero')
+            # else:
+            #     print('Moving to zero')
 
     def set_home_position(self, new_pos):
         self.home_position = new_pos
         print('Home position is now %.3f mm' % new_pos)
+
+    def set_home_here(self):
+        self.home_position = self.return_cur_pos()
+        print('Home position is now %.3f mm' % self.home_position)
 
     def go_to_home(self):
         if self.is_ready():

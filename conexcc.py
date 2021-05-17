@@ -120,6 +120,22 @@ class ConexCC:
             print('Positive SW Limit = %.1f' % resp)
             self.max_limit = resp
 
+    def return_limits(self):
+        err_str = ''
+        resp = 0
+        res, resp, err_str = self.driver.SL_Get(DEV, resp, err_str)
+        if res != 0 or err_str != '':
+            print('Oops: Negative SW Limit: result=%d,response=%.2f,errString=\'%s\'' % (res, resp, err_str))
+        else:
+            self.min_limit = resp
+
+        res, resp, err_str = self.driver.SR_Get(DEV, resp, err_str)
+        if res != 0 or err_str != '':
+            print('Oops: Positive SW Limit: result=%d,response=%.2f,errString=\'%s\'' % (res, resp, err_str))
+        else:
+            self.max_limit = resp
+        return [self.min_limit, self.max_limit]
+
     def read_cur_pos(self):
         err_str = ''
         resp = 0
@@ -228,6 +244,24 @@ class ConexCC:
         if self.is_ready():
             err_str = ''
             res, err_str = self.driver.PA_Set(DEV, 0, err_str)
+            if res != 0 or err_str != '':
+                print('Oops: Move Absolute: result=%d,errString=\'%s\'' % (res, err_str))
+            # else:
+            #     print('Moving to zero')
+
+    def go_to_min(self):
+        if self.is_ready():
+            limits = self.return_limits()
+            err_str = ''
+            res, err_str = self.driver.PA_Set(DEV, limits[0], err_str)
+            if res != 0 or err_str != '':
+                print('Oops: Move Absolute: result=%d,errString=\'%s\'' % (res, err_str))
+
+    def go_to_max(self):
+        if self.is_ready():
+            limits = self.return_limits()
+            err_str = ''
+            res, err_str = self.driver.PA_Set(DEV, limits[1], err_str)
             if res != 0 or err_str != '':
                 print('Oops: Move Absolute: result=%d,errString=\'%s\'' % (res, err_str))
             # else:

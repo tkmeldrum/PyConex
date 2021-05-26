@@ -74,8 +74,7 @@ class ConexGroup:
             self.soft_min = positions
         return self.soft_min
 
-
-#check for valid moves
+#execute an actual move
     def execute_group_move(self, positions):
         self.act_A.move_absolute(positions[0])
         self.act_B.move_absolute(positions[1])
@@ -83,6 +82,7 @@ class ConexGroup:
         self.wait_for_group_ready()
         return self.return_group_pos()
 
+#check for valid moves
     def check_valid_move(self,target):
         if not self.is_group_ready():
             print('Group is not ready')
@@ -95,6 +95,8 @@ class ConexGroup:
             print("Invalid move.")
             return False
 
+#calculate target positions for different types of moves
+#new_pos is always an absolute position
     def move_group_together(self, distance):
         new_pos = self.return_group_pos() + np.ones(3)*distance
         if self.check_valid_move(new_pos) == True:
@@ -106,7 +108,6 @@ class ConexGroup:
         if self.check_valid_move(new_pos) == True:
             self.execute_group_move(new_pos)
         return self.return_group_pos()
-
 
     def move_group_absolute(self, positions):
         new_pos = positions
@@ -132,9 +133,9 @@ class ConexGroup:
             self.execute_group_move(new_pos)
         return self.return_group_pos()
 
-    # def flatten_group(self):
-    #     centroid_pos = self.return_centroid()
-    #     new_pos = np.ones(3)*centroid_pos
-    #     self.move_group_absolute(new_pos)
-    #     self.group_pos = self.return_group_pos()
-    #     return self.group_pos
+    def flatten_group(self):
+        centroid_pos = self.return_centroid()
+        new_pos = np.ones(3)*centroid_pos
+        if self.check_valid_move(new_pos) == True:
+            self.execute_group_move(new_pos)
+        return self.return_group_pos()

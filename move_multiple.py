@@ -16,7 +16,10 @@ class ConexGroup:
         self.act_B = ConexCC(com_portB, velocity)
         self.act_C = ConexCC(com_portC, velocity)
         self.relative_flat = relative_flat
+        self.soft_min = [0, 0, 0]
+        self.soft_max = [12, 12, 12]
 
+# check for ready
     def is_group_ready(self):
         if (self.act_A.is_ready() and self.act_B.is_ready() and self.act_C.is_ready()):
             return True
@@ -37,78 +40,13 @@ class ConexGroup:
                 return False
         return True
 
+# return information on group, set software limits
     def return_group_pos(self):
         self.group_pos = []
         self.group_pos.append(self.act_A.return_cur_pos())
         self.group_pos.append(self.act_B.return_cur_pos())
         self.group_pos.append(self.act_C.return_cur_pos())
         return self.group_pos
-
-    def move_group_together(self, distance):
-        if not self.is_group_ready():
-            print('Group is not ready')
-            return False
-        else:
-            self.act_A.move_relative(distance)
-            self.act_B.move_relative(distance)
-            self.act_C.move_relative(distance)
-            self.wait_for_group_ready()
-            return self.return_group_pos()
-
-    def move_group_relative(self, distances):
-        if not self.is_group_ready():
-            print('Group is not ready')
-            return False
-        else:
-            self.act_A.move_relative(distances[0])
-            self.act_B.move_relative(distances[1])
-            self.act_C.move_relative(distances[2])
-            self.wait_for_group_ready()
-            return self.return_group_pos()
-
-    def move_group_absolute(self, positions):
-        if not self.is_group_ready():
-            print('Group is not ready')
-            return False
-        else:
-            self.act_A.move_absolute(positions[0])
-            self.act_B.move_absolute(positions[1])
-            self.act_C.move_absolute(positions[2])
-            self.wait_for_group_ready()
-            return self.return_group_pos()
-
-    def zero_group(self):
-        if not self.is_group_ready():
-            print('Group is not ready')
-            return False
-        else:
-            self.act_A.go_to_zero()
-            self.act_B.go_to_zero()
-            self.act_C.go_to_zero()
-            self.wait_for_group_ready()
-            return self.return_group_pos()
-
-    def min_group(self):
-        if not self.is_group_ready():
-            print('Group is not ready')
-            return False
-        else:
-            self.act_A.go_to_min()
-            self.act_B.go_to_min()
-            self.act_C.go_to_min()
-            self.wait_for_group_ready()
-            return self.return_group_pos()
-
-    def max_group(self):
-        if not self.is_group_ready():
-            print('Group is not ready')
-            return False
-        else:
-            self.act_A.go_to_max()
-            self.act_B.go_to_max()
-            self.act_C.go_to_max()
-            self.wait_for_group_ready()
-            return self.return_group_pos()
 
     def return_tip_tilt(self):
         self.group_pos = self.return_group_pos()
@@ -122,54 +60,81 @@ class ConexGroup:
         centroid_pos = np.mean(self.group_pos)
         return centroid_pos
 
-    def flatten_group(self):
-        centroid_pos = self.return_centroid()
-        new_pos = np.ones(3)*centroid_pos
-        self.move_group_absolute(new_pos)
-        self.group_pos = self.return_group_pos()
-        return self.group_pos
+    def set_group_max(self,positions=None):
+        if not positions:
+            self.soft_max = self.return_group_pos()
+        else:
+            self.soft_max = positions
+        return self.soft_max
+
+    def set_group_min(self,positions=None):
+        if not positions:
+            self.soft_min = self.return_group_pos()
+        else:
+            self.soft_min = positions
+        return self.soft_min
 
 
-# controller_dict = {"port": ["com8", "com7", "com9"],
-#                    "offset": [0, 0, 0],
-#                    "label": ["A", "B", "C"]}
-#
-#
-# actuator_A = ConexCC(com_port=controller_dict["port"][0], velocity=0.4)
-# actuator_B = ConexCC(com_port=controller_dict["port"][1], velocity=0.4)
-# actuator_C = ConexCC(com_port=controller_dict["port"][2], velocity=0.4)
-#
-# actuator_A.move_absolute(6)
-# actuator_B.move_absolute(6)
-# actuator_C.move_absolute(6)
-#
-# actuator_A.wait_for_ready(timeout=60)
-# actuator_B.wait_for_ready(timeout=60)
-# actuator_C.wait_for_ready(timeout=60)
-#
-# actuator_A.move_relative(0.125)
-# actuator_B.move_relative(0.125)
-# actuator_C.move_relative(-0.5)
-#
-# actuator_A.wait_for_ready(timeout=60)
-# actuator_B.wait_for_ready(timeout=60)
-# actuator_C.wait_for_ready(timeout=60)
-#
-# tilt_angle = m.degrees(m.atan(actuator_A.return_cur_pos()-actuator_B.return_cur_pos())/240)
-# print(tilt_angle)
-# tip_angle = m.degrees(m.atan(actuator_A.return_cur_pos()-actuator_C.return_cur_pos())/(120*m.sqrt(3)))
-# print(tip_angle)
-#
-#
-# actuator_A.move_relative(0.125)
-# actuator_B.move_relative(-0.125)
-# actuator_C.move_relative(0)
-#
-# actuator_A.wait_for_ready(timeout=60)
-# actuator_B.wait_for_ready(timeout=60)
-# actuator_C.wait_for_ready(timeout=60)
-#
-# tilt_angle = m.degrees(m.atan(actuator_A.return_cur_pos()-actuator_B.return_cur_pos())/240)
-# print(tilt_angle)
-# tip_angle = m.degrees(m.atan(actuator_A.return_cur_pos()-actuator_C.return_cur_pos())/(120*m.sqrt(3)))
-# print(tip_angle)
+#check for valid moves
+    def execute_group_move(self, positions):
+        self.act_A.move_absolute(positions[0])
+        self.act_B.move_absolute(positions[1])
+        self.act_C.move_absolute(positions[2])
+        self.wait_for_group_ready()
+        return self.return_group_pos()
+
+    def check_valid_move(self,target):
+        if not self.is_group_ready():
+            print('Group is not ready')
+            return False
+        if (target[0]<=12 and target[0]<=self.soft_max[0] and target[0]>=0 and target[0]>=self.soft_min[0] and\
+            target[1]<=12 and target[1]<=self.soft_max[1] and target[1]>=0 and target[1]>=self.soft_min[1] and\
+            target[2]<=12 and target[2]<=self.soft_max[2] and target[2]>=0 and target[2]>=self.soft_min[2]):
+            return True
+        else:
+            print("Invalid move.")
+            return False
+
+    def move_group_together(self, distance):
+        new_pos = self.return_group_pos() + np.ones(3)*distance
+        if self.check_valid_move(new_pos) == True:
+            self.execute_group_move(new_pos)
+        return self.return_group_pos()
+
+    def move_group_relative(self, distances):
+        new_pos = self.return_group_pos() + distances
+        if self.check_valid_move(new_pos) == True:
+            self.execute_group_move(new_pos)
+        return self.return_group_pos()
+
+
+    def move_group_absolute(self, positions):
+        new_pos = positions
+        if self.check_valid_move(new_pos) == True:
+            self.execute_group_move(new_pos)
+        return self.return_group_pos()
+
+    def zero_group(self):
+        new_pos = [0,0,0]
+        if self.check_valid_move(new_pos) == True:
+            self.execute_group_move(new_pos)
+        return self.return_group_pos()
+
+    def min_group(self):
+        new_pos = self.soft_min
+        if self.check_valid_move(new_pos) == True:
+            self.execute_group_move(new_pos)
+        return self.return_group_pos()
+
+    def max_group(self):
+        new_pos = self.soft_max
+        if self.check_valid_move(new_pos) == True:
+            self.execute_group_move(new_pos)
+        return self.return_group_pos()
+
+    # def flatten_group(self):
+    #     centroid_pos = self.return_centroid()
+    #     new_pos = np.ones(3)*centroid_pos
+    #     self.move_group_absolute(new_pos)
+    #     self.group_pos = self.return_group_pos()
+    #     return self.group_pos

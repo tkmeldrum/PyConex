@@ -8,7 +8,20 @@ from time import sleep
 
 
 group_1 = ConexGroup()
-group_1.min_group()
+group_1.set_group_max([2,2,2])
+
+aa = group_1.soft_min
+print(aa)
+bb = group_1.soft_max
+print(bb)
+
+cc = group_1.max_group()
+print(cc)
+# group_1.move_group_together(0.2)
+# group_1.set_group_max([3, 3, 3])
+# cc = group_1.soft_max
+# print(cc)
+# group_1.move_group_together(2)
 #
 # bb = group_1.return_centroid()
 # print(bb)

@@ -8,16 +8,29 @@ from time import sleep
 
 
 group_1 = ConexGroup()
-group_1.set_group_max([2,2,2])
+group_1.set_group_max([10.2,11.2,10.2])
 
-aa = group_1.soft_min
-print(aa)
-bb = group_1.soft_max
-print(bb)
+print("Software minimum = [{:.3f}, {:.3f}, {:.3f}] mm".format(*group_1.soft_min))
+print("Software maximum = [{:.3f}, {:.3f}, {:.3f}] mm".format(*group_1.soft_max))
 
-cc = group_1.max_group()
-print(cc)
-# group_1.move_group_together(0.2)
+
+
+# group_1.move_group_absolute([8.2,8.2,8.2], realMove = True)
+# group_1.tilt_group(-50, realMove = True)
+group_1.tip_group(+25, realMove = True)
+
+
+print("Position = [{:.3f}, {:.3f}, {:.3f}] mm".format(*group_1.return_group_pos()))
+print("Tilt = {:.3f} (displacement in um)".format(group_1.return_tilt()))
+print("Tip = {:.3f} (displacement in um)".format(group_1.return_tip()))
+
+
+#
+# ee = group_1.move_group_relative([+0.05,0.00,-0.05])
+# print(ee)
+# ff = group_1.move_group_together(0.3)
+# print(ff)
+
 # group_1.set_group_max([3, 3, 3])
 # cc = group_1.soft_max
 # print(cc)

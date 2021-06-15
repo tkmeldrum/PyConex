@@ -30,7 +30,7 @@ class ConexCC:
             print('Error opening port %s' % com_port)
             self.positioner_error = 'init failed'
         else:
-            print('Connected to %s' % com_port)
+            # print('Connected to %s' % com_port)
             self.init_positioner()
             # self.read_velocity()
             # self.set_velocity(velocity)
@@ -194,8 +194,8 @@ class ConexCC:
         res, err_str = self.driver.OR(DEV, err_str)
         if res != 0 or err_str != '':
             print('Error initializing positioner. Result=%d, errString=\'%s\'' % (res, err_str))
-        else:
-            print('Positioner initialized.')
+        # else:
+        #     print('Positioner initialized.')
 
     def set_homing_velocity(self, velocity):
         if velocity > MAX_VELOCITY:
@@ -235,8 +235,8 @@ class ConexCC:
             res, err_str = self.driver.PA_Set(DEV, new_pos, err_str)
             if res != 0 or err_str != '':
                 print('Oops: Move Absolute: result=%d,errString=\'%s\'' % (res, err_str))
-            else:
-                print('Moving to %.3f mm' % new_pos)
+            # else:
+            #     print('Moving to %.3f mm' % new_pos)
 
 # added by TKM, 13 May 2021
 # include zero and definable (absolute) home position

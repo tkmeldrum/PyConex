@@ -11,7 +11,7 @@ import math as m
 
 class ConexGroup:
 
-    def __init__(self, com_portA="com8", com_portB="com7", com_portC="com9", velocity=0.4, relative_flat = [0, 0, 0]):
+    def __init__(self, com_portA="com8", com_portB="com9", com_portC="com7", velocity=0.4, relative_flat = [0, 0, 0]):
         self.act_A = ConexCC(com_portA, velocity)
         self.act_B = ConexCC(com_portB, velocity)
         self.act_C = ConexCC(com_portC, velocity)
@@ -48,12 +48,15 @@ class ConexGroup:
         self.group_pos.append(self.act_C.return_cur_pos())
         return self.group_pos
 
-    def return_tip_tilt(self):
-        self.group_pos = self.return_group_pos()
-        tilt_offset = self.group_pos[1]-self.group_pos[0]
-        tip_offset = ((self.group_pos[0]+self.group_pos[1])/2 - self.group_pos[2])
-        print("Tilt offset at actuators = %.3f mm" % tilt_offset)
-        print("Tip offset at actuators = %.3f mm" % tip_offset)
+    def return_tip(self):
+        offset = self.return_group_pos() - self.return_centroid()
+        self.tip = (np.mean([offset[0],offset[2]])-offset[1]/2)*(25/(25.4*9.4019))*1000/2
+        return self.tip
+
+    def return_tilt(self):
+        cur_pos = self.return_group_pos()
+        self.tilt = (cur_pos[0]-cur_pos[2])*(25/(25.4*9.4019))*1000/2
+        return self.tilt
 
     def return_centroid(self):
         self.group_pos = self.return_group_pos()
@@ -76,6 +79,7 @@ class ConexGroup:
 
 #execute an actual move
     def execute_group_move(self, positions):
+        print("Moving to [{:.3f}, {:.3f}, {:.3f}]".format(*positions))
         self.act_A.move_absolute(positions[0])
         self.act_B.move_absolute(positions[1])
         self.act_C.move_absolute(positions[2])
@@ -92,50 +96,92 @@ class ConexGroup:
             target[2]<=12 and target[2]<=self.soft_max[2] and target[2]>=0 and target[2]>=self.soft_min[2]):
             return True
         else:
-            print("Invalid move.")
+            print("Invalid move to [{:.3f}, {:.3f}, {:.3f}].".format(*target))
             return False
 
 #calculate target positions for different types of moves
 #new_pos is always an absolute position
-    def move_group_together(self, distance):
+    def move_group_together(self, distance, realMove = False):
         new_pos = self.return_group_pos() + np.ones(3)*distance
         if self.check_valid_move(new_pos) == True:
-            self.execute_group_move(new_pos)
+            if realMove == True:
+                self.execute_group_move(new_pos)
+            else:
+                print("Move to [{:.3f}, {:.3f}, {:.3f}] is valid".format(*new_pos))
         return self.return_group_pos()
 
-    def move_group_relative(self, distances):
-        new_pos = self.return_group_pos() + distances
+    def move_group_relative(self, distances, realMove = False):
+        new_pos = np.add(self.return_group_pos(), distances)
         if self.check_valid_move(new_pos) == True:
-            self.execute_group_move(new_pos)
+            if realMove == True:
+                self.execute_group_move(new_pos)
+            else:
+                print("Move to [{:.3f}, {:.3f}, {:.3f}] is valid".format(*new_pos))
         return self.return_group_pos()
 
-    def move_group_absolute(self, positions):
+    def move_group_absolute(self, positions, realMove = False):
         new_pos = positions
         if self.check_valid_move(new_pos) == True:
-            self.execute_group_move(new_pos)
+            if realMove == True:
+                self.execute_group_move(new_pos)
+            else:
+                print("Move to [{:.3f}, {:.3f}, {:.3f}] is valid".format(*new_pos))
         return self.return_group_pos()
 
-    def zero_group(self):
+    def tilt_group(self,displacement, realMove = False):
+        #length of base is 9.4019 inches, convert base length to mm, divide by length of rf coil, convert um (for input) to mm
+        displacement_mm = 9.4019*25.4/25000*displacement
+        new_pos = np.add(self.return_group_pos(), [displacement_mm,0,-displacement_mm])
+        if self.check_valid_move(new_pos) == True:
+            if realMove == True:
+                self.execute_group_move(new_pos)
+            else:
+                print("Move to [{:.3f}, {:.3f}, {:.3f}] is valid".format(*new_pos))
+        return self.return_group_pos()
+
+    def tip_group(self,displacement, realMove = False):
+        displacement_mm = 9.4019*25.4/25000*displacement
+        new_pos = np.add(self.return_group_pos(), [displacement_mm,-2*displacement_mm,displacement_mm])
+        if self.check_valid_move(new_pos) == True:
+            if realMove == True:
+                self.execute_group_move(new_pos)
+            else:
+                print("Move to [{:.3f}, {:.3f}, {:.3f}] is valid".format(*new_pos))
+        return self.return_group_pos()
+
+    def zero_group(self, realMove = False):
         new_pos = [0,0,0]
         if self.check_valid_move(new_pos) == True:
-            self.execute_group_move(new_pos)
+            if realMove == True:
+                self.execute_group_move(new_pos)
+            else:
+                print("Move to [{:.3f}, {:.3f}, {:.3f}] is valid".format(*new_pos))
         return self.return_group_pos()
 
-    def min_group(self):
+    def min_group(self, realMove = False):
         new_pos = self.soft_min
         if self.check_valid_move(new_pos) == True:
-            self.execute_group_move(new_pos)
+            if realMove == True:
+                self.execute_group_move(new_pos)
+            else:
+                print("Move to [{:.3f}, {:.3f}, {:.3f}] is valid".format(*new_pos))
         return self.return_group_pos()
 
-    def max_group(self):
+    def max_group(self, realMove = False):
         new_pos = self.soft_max
         if self.check_valid_move(new_pos) == True:
-            self.execute_group_move(new_pos)
+            if realMove == True:
+                self.execute_group_move(new_pos)
+            else:
+                print("Move to [{:.3f}, {:.3f}, {:.3f}] is valid".format(*new_pos))
         return self.return_group_pos()
 
-    def flatten_group(self):
+    def flatten_group(self, realMove = False):
         centroid_pos = self.return_centroid()
         new_pos = np.ones(3)*centroid_pos
         if self.check_valid_move(new_pos) == True:
-            self.execute_group_move(new_pos)
+            if realMove == True:
+                self.execute_group_move(new_pos)
+            else:
+                print("Move to [{:.3f}, {:.3f}, {:.3f}] is valid".format(*new_pos))
         return self.return_group_pos()

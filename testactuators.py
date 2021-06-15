@@ -8,21 +8,21 @@ from time import sleep
 
 
 group_1 = ConexGroup()
-group_1.set_group_max([10.2,11.2,10.2])
+group_1.set_group_max([11,11.2,11])
 
 # print("Software minimum = [{:.4f}, {:.4f}, {:.4f}] mm".format(*group_1.soft_min))
 # print("Software maximum = [{:.4f}, {:.4f}, {:.4f}] mm".format(*group_1.soft_max))
 
 
-# group_1.move_group_absolute([8.2,8.2,8.2], realMove = True)
-# group_1.tilt_group(-50, realMove = True)
-group_1.tip_group(+25, realMove = True)
+group_1.move_group_absolute([8.2,8.2,8.2], realMove = True)
+group_1.tilt_group(-50, realMove = True)
+group_1.tip_group(+125, realMove = True)
 
 
 print("Position = [{:.4f}, {:.4f}, {:.4f}] mm".format(*group_1.return_group_pos()))
+print("Centroid is at {:.4f} mm".format(group_1.return_centroid()))
 print("Tilt = {:.4f} (displacement in um)".format(group_1.return_tilt()))
 print("Tip = {:.4f} (displacement in um)".format(group_1.return_tip()))
-
 
 
 # group_1.move_group_relative([+0.05,0.00,-0.05], realMove = False)

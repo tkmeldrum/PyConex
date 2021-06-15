@@ -107,7 +107,7 @@ class ConexGroup:
             if realMove == True:
                 self.execute_group_move(new_pos)
             else:
-                print("Move to [{:.3f}, {:.3f}, {:.3f}] is valid".format(*new_pos))
+                print("Valid nove to [{:.3f}, {:.3f}, {:.3f}].".format(*new_pos))
         return self.return_group_pos()
 
     def move_group_relative(self, distances, realMove = False):

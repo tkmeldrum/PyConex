@@ -13,17 +13,21 @@ group_1.set_group_max([11,11.2,11])
 # print("Software minimum = [{:.4f}, {:.4f}, {:.4f}] mm".format(*group_1.soft_min))
 # print("Software maximum = [{:.4f}, {:.4f}, {:.4f}] mm".format(*group_1.soft_max))
 
+# group_1.move_group_all(8.145,-42.5,+117.5, realMove = True)
+group_1.flatten_group(realMove = False)
 
-group_1.move_group_absolute([8.2,8.2,8.2], realMove = True)
-group_1.tilt_group(-50, realMove = True)
-group_1.tip_group(+125, realMove = True)
+# group_1.move_group_absolute([8.12,8.12,8.12], realMove = True)
+# group_1.tilt_group(-45, realMove = True)
+# group_1.tip_group(+125, realMove = True)
 
 
 print("Position = [{:.4f}, {:.4f}, {:.4f}] mm".format(*group_1.return_group_pos()))
-print("Centroid is at {:.4f} mm".format(group_1.return_centroid()))
-print("Tilt = {:.4f} (displacement in um)".format(group_1.return_tilt()))
-print("Tip = {:.4f} (displacement in um)".format(group_1.return_tip()))
+print("Centroid = {:.3f} mm; Tilt = {:+.2f} um; Tip = {:+.2f} um".format(group_1.return_centroid(), group_1.return_tilt(), group_1.return_tip()))
 
+
+# print("Centroid is at {:.4f} mm".format(group_1.return_centroid()))
+# print("Tilt = {:.4f} (displacement in um)".format(group_1.return_tilt()))
+# print("Tip = {:.4f} (displacement in um)".format(group_1.return_tip()))
 
 # group_1.move_group_relative([+0.05,0.00,-0.05], realMove = False)
 # group_1.move_group_together(0.3,realMove = False)

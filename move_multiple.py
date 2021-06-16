@@ -50,7 +50,7 @@ class ConexGroup:
 
     def return_tip(self):
         offset = self.return_group_pos() - self.return_centroid()
-        self.tip = (np.mean([offset[0],offset[2]])-offset[1]/2)*(25/(25.4*9.4019))*1000/2
+        self.tip = (np.mean([offset[0],offset[2]])-offset[1]/2)*(25/(25.4*(9.4019/2*np.sqrt(3))))*1000/2
         return self.tip
 
     def return_tilt(self):
@@ -140,8 +140,19 @@ class ConexGroup:
         return self.return_group_pos()
 
     def tip_group(self,displacement, realMove = False):
-        displacement_mm = 9.4019*25.4/25000*displacement
+        displacement_mm = (9.4019/2*np.sqrt(3))*25.4/25000*displacement
         new_pos = np.add(self.return_group_pos(), [displacement_mm,-2*displacement_mm,displacement_mm])
+        if self.check_valid_move(new_pos) == True:
+            if realMove == True:
+                self.execute_group_move(new_pos)
+            else:
+                print("Move to [{:.3f}, {:.3f}, {:.3f}] is valid".format(*new_pos))
+        return self.return_group_pos()
+
+    def move_group_all(self,centroid,tilt,tip, realMove = False):
+        tilt_mm = 9.4019*25.4/25000*tilt
+        tip_mm = (9.4019/2*np.sqrt(3))*25.4/25000*tip
+        new_pos = np.ones(3)*centroid + np.array([tilt_mm,0,-tilt_mm]) + np.array([tip_mm,-2*tip_mm,tip_mm])
         if self.check_valid_move(new_pos) == True:
             if realMove == True:
                 self.execute_group_move(new_pos)

@@ -4,9 +4,9 @@ import numpy as np
 import time
 import serial
 
-filename_in = "C:\CommonData\TKM\PM5\TiltTip\input_positions.txt"
-filename_out = "Z:\Data\TKM\PM5\June2021\TipTilt\Sample249_auto\CPMG_series2\output_positions.txt"
-exptime = 512*300
+filename_in = "Z:\Data\TKM\PM5\June2021\TipTilt\Sample249_auto\CPMG_series4\input_positions.txt"
+filename_out = "Z:\Data\TKM\PM5\June2021\TipTilt\Sample249_auto\CPMG_series4\output_positions.txt"
+exptime = 64*0.3
 
 serialport = 'COM10'
 baud = 9600
@@ -69,6 +69,6 @@ for i in range(1,len(content)):
     writefile.write("{:d}, {:f}, {:f}, {:f}\n".format(i+1,group_1.return_centroid(), group_1.return_tilt(), group_1.return_tip()))
     writefile.close()
     time.sleep(exptime)
-    
+
 #close serial connection
 ser.close()

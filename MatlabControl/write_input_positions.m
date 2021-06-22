@@ -1,11 +1,15 @@
-function [num_positions] = write_input_positions(tilt_vals, tip_vals, centroid_vals, input_positions_filename)
+function [num_positions] = write_input_positions(tilt_vals, tip_vals, centroid_vals, filedir)
 
-[o,p,q] = meshgrid(tilt_vals, tip_vals, centroid_vals);
-positions = [q(:) p(:) o(:)];
+[p,o,q] = meshgrid(tip_vals, tilt_vals, centroid_vals);
+positions = [q(:) o(:) p(:)];
 num_positions = numel(positions)/3;
 positions(:,2:4) = positions;
 positions(:,1) = 1:num_positions;
 
-fileID = fopen(input_positions_filename,'w');
+if ~exist(filedir, 'dir')
+    mkdir(filedir)
+end
+
+fileID = fopen([filedir,'input_positions.txt'],'w');
 fprintf(fileID,  '%u, %f, %f, %f\n', positions' );
 fclose(fileID);

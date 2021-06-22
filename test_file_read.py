@@ -3,14 +3,14 @@ import time
 
 filename_in = "/Users/tyler/Desktop/input_positions.txt"
 filename_out = "/Users/tyler/Desktop/output_positions.txt"
+
 myfile = open(filename_in, "r")
 content = myfile.readlines()
 myfile.close()
 
-#before run
 #go to first position
-#start acq on spec computer
-#run this script
+
+#[manually] start acq on spec computer
 
 params = content[0].rstrip("\n").split(", ")
 filenum = int(params[0])
@@ -37,3 +37,5 @@ for i in range(1,len(content)):
     writefile = open(filename_out, "a")
     writefile.write("{:d}, {:f}, {:f}, {:f}\n".format(filenum, centroid, tilt, tip))
     writefile.close()
+
+#close serial connection

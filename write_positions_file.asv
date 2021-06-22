@@ -2,8 +2,8 @@ clear
 close all
 clc
 
-tilt_vals = -150:50:150;
-tip_vals = -150:50:150;
+tilt_vals = -150:25:150;
+tip_vals = -150:25:150;
 centroid = 5;
 input_positions_filename = '/Users/tyler/Desktop/input_positions.txt';
 
@@ -23,7 +23,7 @@ fprintf(fileID,  '%u, %f, %f, %f\n', positions' );
 
 fclose(fileID);
 
-%% read from output positions
+%% read from outp
 fileID = fopen(output_positions_filename,'r');
 data = fscanf(fileID,'%u, %f, %f, %f', [4 507]);
 fclose(fileID);

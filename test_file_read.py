@@ -17,7 +17,7 @@ filenum = int(params[0])
 centroid = float(params[1])
 tilt = float(params[2])
 tip = float(params[3])
-writefile = open(filename_out, "a")
+writefile = open(filename_out, "w")
 writefile.write("{:d}, {:f}, {:f}, {:f}\n".format(filenum, centroid, tilt, tip))
 writefile.close()
 
@@ -30,7 +30,7 @@ for i in range(1,len(content)):
     tip = float(params[3])
 
     #wait for serial
-    
+
     #move (and acq comp should wait too)
 
     # print("File number {:d}, centroid = {:f} mm, tilt = {:f} um, tip = {:f} um".format(filenum, centroid, tilt, tip))

@@ -1,5 +1,6 @@
 const int TTLPin = 9; // the pin number for the TTL input
 int val = 0;
+//int ind = 0;
 long startTime = 0;
 long endTime = 0;
 long pulseTime = 0;
@@ -21,8 +22,11 @@ void loop() {
     }
     unsigned long endTime = millis();
     pulseTime = endTime - startTime;
-    if (pulseTime >= 10) {
-      Serial.write(" GO TO NEXT\n");
+    if (pulseTime >= 25) {
+//      ind++;
+//      Serial.print(ind);
+      Serial.write("GO\n");
+      
 //      Serial.println();
     }
   }

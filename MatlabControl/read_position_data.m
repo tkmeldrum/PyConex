@@ -13,7 +13,7 @@ close all
 %% user defined parameters
 params.gamma = 42.577;
 params.G = 23.87; 
-params.zf = 0;
+params.zf = 4;
 
 [output_positions_filename,filedir] = uigetfile('*.txt');
 

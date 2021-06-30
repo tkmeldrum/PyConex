@@ -16,7 +16,7 @@ timeout = None
 
 #initialize actuator group
 group_1 = ConexGroup()
-group_1.set_group_max([11,11.2,11.4])
+group_1.set_group_max([11,11.2,11.5])
 
 #read matlab-generated csv file of positions
 myfile = open(filename_in, "r")

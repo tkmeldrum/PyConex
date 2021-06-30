@@ -8,12 +8,12 @@ from move_multiple import ConexGroup
 
 
 group_1 = ConexGroup()
-group_1.set_group_max([11,11.2,11.38])
+group_1.set_group_max([11,11.2,11.5])
 
 # print("Software minimum = [{:.4f}, {:.4f}, {:.4f}] mm".format(*group_1.soft_min))
 # print("Software maximum = [{:.4f}, {:.4f}, {:.4f}] mm".format(*group_1.soft_max))
 
-group_1.move_group_all(8.1195,-200,130, realMove = True)
+group_1.move_group_all(8.0695,-210,130, realMove = True)
 # group_1.flatten_group(realMove = False)
 
 # group_1.move_group_absolute([8.12,8.12,8.12], realMove = True)

@@ -71,4 +71,11 @@ if showfigs == 1
         end
     end
     pubgraph(gg)
+    
+    mm = figure(3);
+    subplot(1,2,1)
+    plot(z,int_spatial(:,bestPos),'-r');
+    subplot(1,2,2)
+    plot(dz,dSA(:,bestPos),'-r');
+    pubgraph(mm)
 end

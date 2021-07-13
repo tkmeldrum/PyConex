@@ -12,11 +12,11 @@ close all
 
 %% user defined parameters
 
-tilt_set = [-215, 2, -205]; %um
-tip_set =  [125, 2, 135]; %um
-centroid_set = [8.0695, 0, 8.0695]; %mm
+tilt_set = [-155,1,-149]; %um
+tip_set =  [132, 1, 136]; %um
+centroid_set = [6, 0, 6]; %mm
 
-filedir = 'Z:\Data\TKM\PM5\June2021\TipTilt\Sample249_auto\CPMG_series9\';
+filedir = 'Z:\Data\TKM\PM5\June2021\TipTilt\Sample160_auto\CPMG_series6\';
 
 tilt_vals = make_inc_vector(tilt_set);
 tip_vals = make_inc_vector(tip_set);

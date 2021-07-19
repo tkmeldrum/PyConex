@@ -12,17 +12,17 @@ close all
 
 %% user defined parameters
 
-tilts = [-300,+300]; %um
-tips =  [-200,+250]; %um
+tilt_minmax = [-300,+300]; %um
+tip_minmax =  [-300,+300]; %um
 centroid_pos = 8.25; %mm
 cells_per_axis = 3;
 filedir = 'Z:\Data\TKM\PM5\July2021\TipTilt\GlassDuctTape\OctreeCPMG_series1\';
 
-dtilt = range(tilts)/cells_per_axis;
-tilt_vals = tilts(1)+dtilt/2:dtilt:tilts(2);
+tilt_vals = linspace(tilt_minmax(1),tilt_minmax(2),cells_per_axis+2);
+tilt_vals = tilt_vals(2:end-1);
+tip_vals = linspace(tip_minmax(1),tip_minmax(2),cells_per_axis+2);
+tip_vals = tilt_vals(2:end-1);
+centroid_vals = make_inc_vector(centroid_set);
 
-dtip = range(tips)/cells_per_axis;
-tip_vals = tips(1)+dtip/2:dtip:tilts(2);
-
-nPos_out = write_input_positions(tilt_vals,tip_vals,centroid_pos,filedir);
+nPos_out = write_input_positions(tilt_vals,tip_vals,centroid_vals,filedir)
 

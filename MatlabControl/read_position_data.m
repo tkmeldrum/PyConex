@@ -20,6 +20,7 @@ params.zf = 4;
 % filedir = '/Volumes/ISC1026/Data/TKM/PM5/June2021/TipTilt/Sample249_auto/CPMG_series2/';
 main_title = 'test';
 showfigs = 0;
+make_next_octree = 0;
 
 % output_positions_filename = [filedir,'input_positions.txt'];
 
@@ -46,8 +47,6 @@ nPos_in = size(positions_data,1)
 
 %% process data with FT
 [rowsout, colsout] = prep_for_subplot(nPos_in);
-
-
 
 for ii = 1:nPos_in
     filelist{ii} = [filedir,num2str(ii),filesep];

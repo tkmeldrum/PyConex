@@ -22,6 +22,7 @@ main_title = 'test';
 showfigs = 0;
 make_next_octree = 0;
 
+
 % output_positions_filename = [filedir,'input_positions.txt'];
 
 %% read file made by python with output positions
@@ -48,6 +49,8 @@ nPos_in = size(positions_data,1)
 %% process data with FT
 [rowsout, colsout] = prep_for_subplot(nPos_in);
 
+
+
 for ii = 1:nPos_in
     filelist{ii} = [filedir,num2str(ii),filesep];
     [echoVec,z,spatialdata(:,:,ii),timedata(:,:,ii),params,~] = readKeaForFTT2(filelist{ii},params);
@@ -63,6 +66,11 @@ best_data = positions_data(bestPos,:)
 all_pks = reshape(pks,numel(tilts),numel(tips));
 all_widths = reshape(widths,numel(tilts),numel(tips));
 
+octree_out_data = [positions_data max(int_spatial)' max(dSA)'];
+
+fileID = fopen([filedir,'octree_out.txt'],'w');
+fprintf(fileID,  '%u, %f, %f, %f, %f, %f\n', octree_out_data' );
+fclose(fileID);
 %%
 
 
@@ -119,3 +127,27 @@ if showfigs == 1
     ylabel('time between position [s]')
     pubgraph(ll)
 end
+
+%% make next octree
+
+if make_next_octree == 1
+    cells_per_axis = numel(tilts);
+    octree_recenter = positions_data(bestPos,:);
+    centroid_pos = octree_recenter(2);
+    dtilt = 
+    
+    tilts = [min(tilts),max(tilts)]; %um
+    tips =  [min(tips),max(tips)]; %um
+    
+    filedir = [filedir(1:end-2),num2str(str2num(filedir(end-1))+1),'\'];
+    
+    dtilt = range(tilts)/cells_per_axis;
+    tilt_vals = tilts(1)+dtilt/2:dtilt:tilts(2);
+    
+    dtip = range(tips)/cells_per_axis;
+    tip_vals = tips(1)+dtip/2:dtip:tilts(2);
+    
+    nPos_out = write_input_positions(tilt_vals,tip_vals,centroid_pos,filedir);
+end
+
+

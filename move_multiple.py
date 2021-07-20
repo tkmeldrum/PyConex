@@ -96,7 +96,7 @@ class ConexGroup:
             target[2]<=12 and target[2]<=self.soft_max[2] and target[2]>=0 and target[2]>=self.soft_min[2]):
             return True
         else:
-            print("Invalid move to [{:.3f}, {:.3f}, {:.3f}].".format(*target))
+            print("*********INVALID MOVE TO [{:.3f}, {:.3f}, {:.3f}] FOUND*********".format(*target))
             return False
 
 #calculate target positions for different types of moves
@@ -107,7 +107,7 @@ class ConexGroup:
             if realMove == True:
                 self.execute_group_move(new_pos)
             else:
-                print("Valid nove to [{:.3f}, {:.3f}, {:.3f}].".format(*new_pos))
+                print("Valid move to [{:.3f}, {:.3f}, {:.3f}].".format(*new_pos))
         return self.return_group_pos()
 
     def move_group_relative(self, distances, realMove = False):

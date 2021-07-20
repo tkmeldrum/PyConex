@@ -21,7 +21,7 @@ filedir = '/Users/tyler/Desktop/TestFikder/';
 
 [nPos_out, positions] = write_input_positions(tilts,tips,centroids,filedir);
 
-[badpostilttip] = check_valid_actuator_moves(positions,actuator_lims);
+[badpostilttip,badposabs] = check_valid_actuator_moves(positions,actuator_lims);
 
 if ~isempty(badpostilttip)
     sprintf('BAD POSTITIONS FOUND.')
@@ -29,5 +29,5 @@ else
     sprintf('No bad positions found.')
 end
 
-% plot_actuator_limits(tilts,tips,centroids,actuator_lims)
+plot_actuator_limits(tilts,tips,centroids,actuator_lims,badpostilttip)
 

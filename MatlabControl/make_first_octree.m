@@ -35,4 +35,4 @@ else
     sprintf('No bad positions found.')
 end
 
-% plot_actuator_limits(tilts,tips,centroid_pos,actuator_lims)
+plot_actuator_limits(tilts,tips,centroid_pos,actuator_lims,badpostilttip)

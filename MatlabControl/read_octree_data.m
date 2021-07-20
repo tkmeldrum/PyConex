@@ -12,7 +12,7 @@ close all
 
 %% user defined parameters
 params.gamma = 42.577;
-params.G = 23.87; 
+params.G = 23.87;
 params.zf = 4;
 
 [output_positions_filename,filedir] = uigetfile('*.txt');
@@ -103,7 +103,7 @@ if showfigs == 1
         end
     end
     pubgraph(hh)
-    
+
     gg = figure(2);
     for ii = 1:nPos_in
         subplot(rowsout,colsout,ii)
@@ -114,14 +114,14 @@ if showfigs == 1
         end
     end
     pubgraph(gg)
-    
+
     mm = figure(3);
     subplot(1,2,1)
     plot(z,int_spatial(:,bestPos),'-r');
     subplot(1,2,2)
     plot(dz,dSA(:,bestPos),'-r');
     pubgraph(mm)
-    
+
     ll = figure(4);
     plot(diff(time_data))
     ylabel('time between position [s]')
@@ -134,16 +134,14 @@ if make_next_octree == 1
     centroid_pos = positions_data(bestPos,2);
     tilt_center = positions_data(bestPos,3);
     tip_center = positions_data(bestPos,4);
-    
+
     dtilt = (tilts(2)-tilts(1))/2;
     dtip = (tips(2)-tips(1))/2;
-    
+
     filedir = [filedir(1:end-2),num2str(str2num(filedir(end-1))+1),'\'];
-    
+
     tilt_vals = [tilt_center-dtilt tilt_center tilt_center+dtilt];
     tip_vals = [tip_center-dtip tip_center tip_center+dtip];
-    
+
     nPos_out = write_input_positions(tilt_vals,tip_vals,centroid_pos,filedir);
 end
-
-

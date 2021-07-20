@@ -1,4 +1,4 @@
-function [num_positions] = write_input_positions(tilt_vals, tip_vals, centroid_vals, filedir)
+function [num_positions, positions] = write_input_positions(tilt_vals, tip_vals, centroid_vals, filedir)
 
 [p,o,q] = meshgrid(tip_vals, tilt_vals, centroid_vals);
 positions = [q(:) o(:) p(:)];

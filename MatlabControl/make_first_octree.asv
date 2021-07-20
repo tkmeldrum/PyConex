@@ -12,8 +12,8 @@ close all
 
 %% user defined parameters
 
-tilts = [-250,+250]; %um
-tips =  [-190,+170]; %um
+tilts = [-300,+300]; %um
+tips =  [-200,+250]; %um
 centroid_pos = 8.25; %mm
 cells_per_axis = 8;
 filedir = '/Users/tyler/Desktop/TestFikder/';
@@ -30,7 +30,7 @@ abs_pos = tilttip_to_abs(positions(:,2:4));
 
 %% check validity of actuator moves
 lower_lim = 0;
-upper_lim = 11.6;
+upper_lim = 12;
 
 A_low = find(abs_pos<lower_lim);
 A_high = find(abs_pos>upper_lim);
@@ -55,13 +55,7 @@ A = centroid_pos + TILTGRID + TIPGRID;
 B = centroid_pos           -2*TIPGRID;
 C = centroid_pos - TILTGRID + TIPGRID;
 
-validgrid = (A>12) + (B>12) + (C>12);
+validgrid = (0>A>12) + (0>B>12) + (0>C>12);
 
-hh = figure(1);
-surf(all_tilts,all_tips,validgrid);
-shading flat
-% colormap(gray(2))
-xlabel('tilts')
-ylabel('tips')
-pubgraph(hh)
-
+hh = figure(1)
+pcolor(all_tilts,all_tips,validgrid);

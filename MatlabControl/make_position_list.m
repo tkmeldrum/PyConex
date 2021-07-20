@@ -18,5 +18,7 @@ centroid_vals = 8.25; %mm
 
 filedir = '/Users/tyler/Desktop/TestFikder/';
 
-nPos_out = write_input_positions(tilt_vals,tip_vals,centroid_vals,filedir);
+[nPos_out, positions] = write_input_positions(tilt_vals,tip_vals,centroid_vals,filedir);
+[A,B,C] = tilttip_to_abs(positions(:,2:4));
+
 

@@ -12,17 +12,11 @@ close all
 
 %% user defined parameters
 
-tilts = [-300,+300]; %um
-tips =  [-200,+250]; %um
-centroid_pos = 8.25; %mm
-cells_per_axis = 3;
-filedir = 'Z:\Data\TKM\PM5\July2021\TipTilt\GlassDuctTape\OctreeCPMG_series1\';
+tilt_vals = -300:+50:+300; %um
+tip_vals =  -200:+50:+250; %um
+centroid_vals = 8.25; %mm
 
-dtilt = range(tilts)/cells_per_axis;
-tilt_vals = tilts(1)+dtilt/2:dtilt:tilts(2);
+filedir = '/Users/tyler/Desktop/TestFikder/';
 
-dtip = range(tips)/cells_per_axis;
-tip_vals = tips(1)+dtip/2:dtip:tilts(2);
-
-nPos_out = write_input_positions(tilt_vals,tip_vals,centroid_pos,filedir);
+nPos_out = write_input_positions(tilt_vals,tip_vals,centroid_vals,filedir);
 

@@ -11,14 +11,23 @@ clc
 close all
 
 %% user defined parameters
+actuator_lims = [0 11.6];
 
-tilt_vals = -300:+50:+300; %um
-tip_vals =  -200:+50:+250; %um
-centroid_vals = 8.25; %mm
+tilts = -300:+50:+300; %um
+tips =  -200:+50:+250; %um
+centroids = 8.25; %mm
 
 filedir = '/Users/tyler/Desktop/TestFikder/';
 
-[nPos_out, positions] = write_input_positions(tilt_vals,tip_vals,centroid_vals,filedir);
-[A,B,C] = tilttip_to_abs(positions(:,2:4));
+[nPos_out, positions] = write_input_positions(tilts,tips,centroids,filedir);
 
+[badpostilttip] = check_valid_actuator_moves(positions,actuator_lims);
+
+if ~isempty(badpostilttip)
+    sprintf('BAD POSTITIONS FOUND.')
+else
+    sprintf('No bad positions found.')
+end
+
+% plot_actuator_limits(tilts,tips,centroids,actuator_lims)
 

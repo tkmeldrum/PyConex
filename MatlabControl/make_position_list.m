@@ -13,8 +13,8 @@ close all
 % user defined parameters
 actuator_lims = [0 11.6];
 
-tilts = -300:+50:+300; %um
-tips =  -200:+50:+250; %um
+tilts = -300:+100:+300; %um
+tips =  -200:+100:+250; %um
 centroids = 8.25; %mm
 
 filedir = '/Users/tyler/Desktop/TestFikder/';

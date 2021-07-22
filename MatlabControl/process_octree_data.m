@@ -23,7 +23,7 @@ params.actuator_lims = [0 11.6];
 write_out = 1;
 
 %generate next level of octree zoom?
-next_octree = 0;
+next_octree = 1;
 
 %%%%%%%%%% end user defined parameters  %%%%%%%%%%
 
@@ -52,6 +52,10 @@ if write_out == 1
     fprintf(fileID,  '%u, %f, %f, %f, %f, %f\n', out_data' );
     fclose(fileID);
 end
+
+% [meshtilt,meshtip] = meshgrid(tilts,tips);
+% SIinterp = interp2(positions_data(:,3),positions_data(:,4),SI.pks,tilts,tips);
+
 
 % make next octree
 if next_octree == 1

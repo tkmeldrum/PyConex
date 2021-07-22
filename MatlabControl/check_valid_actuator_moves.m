@@ -1,4 +1,4 @@
-function [badpostilttip,badposabs] = check_valid_actuator_moves(positions,actuator_lims)
+function [positions] = check_valid_actuator_moves(positions,actuator_lims)
 
 abs_pos = tilttip_to_abs(positions(:,2:4));
 
@@ -14,5 +14,14 @@ badrows = sort([badlow;badhigh]);
 
 badposabs = abs_pos(badrows,:);
 badpostilttip = positions(badrows,:);
+
+if ~isempty(badpostilttip)
+    sprintf('BAD POSTITIONS FOUND.')
+    %trim positions to omit bads
+    positions(badpostilttip(:,1),:) = [];
+    nPos_out = size(positions,1);
+    positions(:,1) = 1:nPos_out;
+    sprintf('Bad positions removed.')
+end
 
 end

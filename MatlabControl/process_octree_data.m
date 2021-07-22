@@ -14,6 +14,7 @@ close all
 params.gamma = 42.577;
 params.G = 23.87;
 params.zf = 4;
+params.actuator_lims = [0 11.6];
 
 
 %write octree data output file?
@@ -58,7 +59,7 @@ if next_octree == 1
     
     % choose here whether you use signal intensity (SI.best_data) or the
     % spatial derivative (dSI.best_data) for the next octree level
-    make_next_octree(SI.best_data,tilts,tips,writedir2)
+    make_next_octree(SI.best_data,tilts,tips,params,writedir2)
 end
 
 %%

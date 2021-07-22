@@ -10,9 +10,9 @@ A_high = find(abs_pos>max(actuator_lims));
 
 [badhigh,~] = ind2sub(size(abs_pos),A_high);
 [badlow,~] = ind2sub(size(abs_pos),A_low);
-badrows = [badlow;badhigh];
+badrows = sort([badlow;badhigh]);
 
 badposabs = abs_pos(badrows,:);
-badpostilttip = sort(positions(badrows,:),1);
+badpostilttip = positions(badrows,:);
 
 end

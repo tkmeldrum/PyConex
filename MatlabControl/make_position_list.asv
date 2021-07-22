@@ -27,7 +27,6 @@ while ~isempty(badpostilttip)
     %trim positions to omit bads
     positions(badpostilttip(:,1),:) = [];
     nPos_out = size(positions,1);
-    positions(:,1) = 1:nPos_out;
     [badpostilttip,badposabs] = check_valid_actuator_moves(positions,actuator_lims);
     sprintf('Bad positions removed.')
 end

@@ -103,7 +103,7 @@ if showfigs == 1
             plot(z,int_spatial(:,graph_order(ii,1))');
             ylim(dINTylims*1.1);
         end
-        text(-500,dINTylims(2),[num2str(graph_order(ii,3)),',',num2str(graph_order(ii,4))]);
+        text
     end
     pubgraph(hh)
     
@@ -120,12 +120,9 @@ if showfigs == 1
             plot(dz,dSA(:,graph_order(ii,1))');
             ylim(dSAylims*1.1);
         end
-        text(-500,dSAylims(2),[num2str(graph_order(ii,3)),',',num2str(graph_order(ii,4))]);
     end
     pubgraph(gg)
-end
-%%
-if showfigs == 1
+    
     mm = figure(3);
     subplot(1,2,1)
     plot(z,int_spatial(:,bestPos),'-r');

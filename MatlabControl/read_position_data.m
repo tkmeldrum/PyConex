@@ -54,7 +54,7 @@ for ii = 1:nPos_in
     [echoVec,z,spatialdata(:,:,ii),timedata(:,:,ii),params,~] = readKeaForFTT2(filelist{ii},params);
     int_spatial(:,ii) = abs(squeeze(sum(spatialdata(:,:,ii),2)));
     dSA(:,ii) = diff(int_spatial(:,ii))./diff(z');
-    [pks(ii),locs(ii),widths(ii),proms(ii)] = findpeaks(dSA(:,ii),'SortStr','descend','NPeaks',1);
+    [pks(ii),locs(ii),widths(ii),proms(ii)] = findpeaks(int_spatial(:,ii),'SortStr','descend','NPeaks',1);
 end
 dz = z(2:end)'-(z(2)-z(1))/2;
 
@@ -71,7 +71,7 @@ all_widths = reshape(widths,numel(tilts),numel(tips));
 
 pp = figure(5);
 % subplot(1,2,1)
-surf(tips,tilts,all_pks); %,'FaceColor','none')
+surf(tips,flipud(tilts),all_pks); %,'FaceColor','none')
 shading interp
 view([0 90])
 xlabel('tips [um]')

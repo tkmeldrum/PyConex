@@ -11,18 +11,19 @@ clc
 close all
 
 % user defined parameters
-actuator_lims = [0 11.6];
+actuator_lims = [0 11.9];
 
-tilts = -300:+100:+300; %um
-tips =  -200:+100:+250; %um
-centroids = 8.25; %mm
+tilts = -300:150:300; %um
+tips =  -300:150:300; %um
+centroids = 6.46; %mm
 
-filedir = '/Users/tyler/Desktop/TestFikder/';
+filedir = 'Z:\Data\LJK\PM5\September 2021\Sample 231\CPMGSeriesA\';
 
 positions = make_positions_mesh(tilts,tips,centroids);
-positions = check_valid_actuator_moves(positions,actuator_lims);
-plot_actuator_limits(positions,actuator_lims)
+[positions, abs_pos] = check_valid_actuator_moves(positions,actuator_lims);
 write_input_positions(filedir,positions)
+plot_actuator_limits(positions,actuator_lims)
+
 
 
 

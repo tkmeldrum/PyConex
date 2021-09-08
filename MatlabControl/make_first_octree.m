@@ -11,13 +11,13 @@ clc
 close all
 
 %% user defined parameters
-actuator_lims = [0 11.6];
+actuator_lims = [0 10];
 
-tilts = [-250,+250]; %um
-tips =  [-190,+170]; %um
-centroid_pos = 8.25; %mm
-cells_per_axis = 8;
-filedir = '/Users/tyler/Desktop/TestFikder/';
+tilts = [-275,+275]; %um
+tips =  [-275,+275]; %um
+centroid_pos = 6.72; %mm
+cells_per_axis = 3;
+filedir = 'Z:\Data\TKM\PM5\July2021\TipTilt\AmineEpon\Octree1\';
 
 dtilt = range(tilts)/cells_per_axis;
 tilt_vals = tilts(1)+dtilt/2:dtilt:tilts(2);
@@ -25,14 +25,7 @@ tilt_vals = tilts(1)+dtilt/2:dtilt:tilts(2);
 dtip = range(tips)/cells_per_axis;
 tip_vals = tips(1)+dtip/2:dtip:tips(2);
 
-[nPos_out, positions] = write_input_positions(tilt_vals,tip_vals,centroid_pos,filedir);
-
-[badpostilttip] = check_valid_actuator_moves(positions,actuator_lims);
-
-if ~isempty(badpostilttip)
-    sprintf('BAD POSTITIONS FOUND.')
-else
-    sprintf('No bad positions found.')
-end
-
-plot_actuator_limits(tilts,tips,centroid_pos,actuator_lims,badpostilttip)
+positions = make_positions_mesh(tilt_vals,tip_vals,centroid_pos);
+[positions, abs_pos] = check_valid_actuator_moves(positions,actuator_lims);
+plot_actuator_limits(positions,actuator_lims)
+write_input_positions(filedir,positions)

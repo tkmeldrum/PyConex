@@ -128,10 +128,14 @@ end
 if showfigs == 1
     mm = figure(3);
     subplot(1,2,1)
-    plot(z,int_spatial(:,bestPos),'-r');
+    hold on
+    plot(z,int_spatial(:,bestINTPos),'-r');
+    plot(z,int_spatial(:,bestdSAPos),'-g');
     ylim(dINTylims*1.1);
     subplot(1,2,2)
-    plot(dz,dSA(:,bestPos),'-r');
+    hold
+    plot(dz,dSA(:,bestINTPos),'-r');
+    plot(dz,dSA(:,bestdSAPos),'-g');
     ylim(dSAylims*1.1);
     pubgraph(mm)
     

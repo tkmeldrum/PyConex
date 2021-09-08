@@ -1,4 +1,4 @@
-function [positions] = check_valid_actuator_moves(positions,actuator_lims)
+function [positions,abs_pos] = check_valid_actuator_moves(positions,actuator_lims)
 
 abs_pos = tilttip_to_abs(positions(:,2:4));
 

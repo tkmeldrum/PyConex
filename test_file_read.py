@@ -3,9 +3,9 @@ from move_multiple import ConexGroup
 import numpy as np
 import time, datetime, serial
 
-filename_in = "Z:\Data\TKM\PM5\July2021\TipTilt\GlassDuctTape\OctreeCPMG_series1\input_positions.txt"
-filename_out = "Z:\Data\TKM\PM5\July2021\TipTilt\GlassDuctTape\OctreeCPMG_series1\output_positions.txt"
-timestamps_out = "Z:\Data\TKM\PM5\July2021\TipTilt\GlassDuctTape\OctreeCPMG_series1\stamps.txt"
+filename_in = "Z:\Data\LJK\PM5\September 2021\Sample 231\CPMGSeriesA\input_positions.txt"
+filename_out = "Z:\Data\LJK\PM5\September 2021\Sample 231\CPMGSeriesA\output_positions.txt"
+timestamps_out = "Z:\Data\LJK\PM5\September 2021\Sample 231\CPMGSeriesA\stamps.txt"
 # exptime = 1024*0.35 + 9
 
 serialport = 'COM10'
@@ -16,7 +16,7 @@ timeout = None
 
 #initialize actuator group
 group_1 = ConexGroup()
-group_1.set_group_max([11.6, 11.6, 11.6])
+group_1.set_group_max([11.9,11.9,11.9])
 
 #read matlab-generated csv file of positions
 myfile = open(filename_in, "r")

@@ -14,7 +14,7 @@ close all
 params.gamma = 42.577;
 params.G = 23.87;
 params.zf = 4;
-params.actuator_lims = [0 11.6];
+params.actuator_lims = [0 11.7];
 
 
 %write octree data output file?
@@ -23,7 +23,7 @@ params.actuator_lims = [0 11.6];
 write_out = 1;
 
 %generate next level of octree zoom?
-next_octree = 1;
+next_octree = 0;
 
 %%%%%%%%%% end user defined parameters  %%%%%%%%%%
 
@@ -63,7 +63,22 @@ if next_octree == 1
     
     % choose here whether you use signal intensity (SI.best_data) or the
     % spatial derivative (dSI.best_data) for the next octree level
-    make_next_octree(SI.best_data,tilts,tips,params,writedir2)
+    [next_positions, next_abs_pos] = make_next_octree(SI.best_data,tilts,tips,params,writedir2);
+end
+
+%% fix mesh problems in case acq doesn't finish
+
+SI.hold_matrix = zeros(numel(tilts),numel(tips));
+dSI.hold_matrix = zeros(numel(tilts),numel(tips));
+
+for ii = 1:numel(tilts)
+    for jj = 1:numel(tips)
+        try
+            ind_search = find(input_pos_data(:,3) == tilts(ii) & input_pos_data(:,4) == tips(jj));
+            SI.hold_matrix(ii,jj) = out_data(ind_search,5);
+            dSI.hold_matrix(ii,jj) = out_data(ind_search,6);
+        end
+    end
 end
 
 %%
@@ -71,12 +86,19 @@ end
 % SI.all_pks = reshape(SI.pks,numel(tilts),numel(tips));
 % dSI.all_widths = reshape(dSI.widths,numel(tilts),numel(tips));
 pp = figure(5);
-% subplot(1,2,1)
-surf(tips,tilts,all_pks); %,'FaceColor','none')
-shading interp
-view([0 90])
-xlabel('tips [um]')
-ylabel('tilts [um]')
+for ii = 1:size(out_data,1)
+subplot(3,3,ii)
+hold on
+yyaxis left
+plot(data.z,data.SI(:,ii));
+ylabel('SI [arb]')
+
+yyaxis right
+plot(data.dz,data.dSI(:,ii));
+
+xlabel('z [um]')
+ylabel('d(SI)/dz [um-1]')
+end
 
 % subplot(1,2,2)
 % surf(tips,tilts,all_pks./all_widths)

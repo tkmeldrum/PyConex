@@ -13,7 +13,7 @@ group_1.set_group_max([11.9,11.9,11.9])
 # print("Software minimum = [{:.4f}, {:.4f}, {:.4f}] mm".format(*group_1.soft_min))
 # print("Software maximum = [{:.4f}, {:.4f}, {:.4f}] mm".format(*group_1.soft_max))
 
-group_1.move_group_all(6.46,-300,+300, realMove = True)
+group_1.move_group_all(6.45,0,+90, realMove = True)
 # group_1.flatten_group(realMove = True)
 
 # group_1.move_group_absolute([0,0,0], realMove = True)

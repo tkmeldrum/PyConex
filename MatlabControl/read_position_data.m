@@ -92,7 +92,7 @@ if showfigs == 1
     dINTylims = [min(min(int_spatial,[],1)) max(max(int_spatial,[],1))];
     hh = figure(1);
     for ii = 1:nPos_in
-        subplot(rowsout,colsout,ii)
+        subplot(numel(tilts),numel(tips),ii)
         if graph_order(ii) == bestINTPos
             plot(z,int_spatial(:,graph_order(ii,1))','-r');
             ylim(dINTylims*1.1);
@@ -109,7 +109,7 @@ if showfigs == 1
     
     gg = figure(2);
     for ii = 1:nPos_in
-        subplot(rowsout,colsout,ii)
+        subplot(numel(tilts),numel(tips),ii)
         if graph_order(ii) == bestINTPos
             plot(dz,dSA(:,graph_order(ii,1)),'-r');
             ylim(dSAylims*1.1);

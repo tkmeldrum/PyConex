@@ -13,11 +13,11 @@ close all
 %% user defined parameters
 actuator_lims = [0 10];
 
-tilts = [-275,+275]; %um
-tips =  [-275,+275]; %um
-centroid_pos = 6.72; %mm
+tilts = [-100,+150]; %um
+tips =  [-100,+150]; %um
+centroid_pos = 6.47; %mm
 cells_per_axis = 3;
-filedir = 'Z:\Data\TKM\PM5\July2021\TipTilt\AmineEpon\Octree1\';
+filedir = 'Z:\Data\LJK\PM5\September2021\Sample1\Octree2\';
 
 dtilt = range(tilts)/cells_per_axis;
 tilt_vals = tilts(1)+dtilt/2:dtilt:tilts(2);

@@ -20,7 +20,7 @@ params.zf = 4;
 % filedir = '/Volumes/ISC1026/Data/TKM/PM5/June2021/TipTilt/Sample249_auto/CPMG_series2/';
 main_title = 'test';
 showfigs = 1;
-calc_next_octree = 1;
+make_next_octree = 0;
 
 % output_positions_filename = [filedir,'input_positions.txt'];
 
@@ -147,10 +147,7 @@ if showfigs == 1
 end
 
 %%
-if calc_next_octree == 1
-    next_Octree_ind = 7;
-    params.actuator_lims = [0 11.9];
+if make_next_octree == 1
     writedir2 = [uigetdir(filedir,'Choose directory to write next level of Octree data.'),filesep];
-    [next_positions, next_abs_pos] = make_next_octree(input_pos_data(next_Octree_ind,:),...
-        tilts,tips,params,writedir2);
+    [positions, abs_pos] = make_next_octree(bestPos,tilts,tips,params,writedir);
 end

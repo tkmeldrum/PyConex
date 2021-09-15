@@ -13,11 +13,11 @@ close all
 % user defined parameters
 actuator_lims = [0 11.9];
 
-tilts = -50:25:100; %um
-tips =  30:24:150; %um
-centroids = 6.45; %mm
+tilts = -100:50:150; %um
+tips =  -100:50:150; %um
+centroids = 6.47; %mm
 
-filedir = 'Z:\Data\LJK\PM5\September2021\Sample169\CPMGSeriesC\';
+filedir = 'Z:\Data\LJK\PM5\September2021\Sample1\CPMGSeriesA\';
 
 positions = make_positions_mesh(tilts,tips,centroids);
 [positions, abs_pos] = check_valid_actuator_moves(positions,actuator_lims);

@@ -13,7 +13,13 @@ group_1.set_group_max([11.9,11.9,11.9])
 # print("Software minimum = [{:.4f}, {:.4f}, {:.4f}] mm".format(*group_1.soft_min))
 # print("Software maximum = [{:.4f}, {:.4f}, {:.4f}] mm".format(*group_1.soft_max))
 
-group_1.move_group_all(6.47,+0,-0, realMove = True)
+group_1.move_group_all(6, 0,0, realMove = True)
+# group_1.zero_group(realMove = True)
+
+
+# group_1.move_group_all(6.44,0,0, realMove = True)
+# group_1.move_group_all(6.46,-300,-300, realMove = True)
+
 # group_1.flatten_group(realMove = True)
 
 # group_1.move_group_absolute([0,0,0], realMove = True)
@@ -32,4 +38,3 @@ print("Centroid = {:.3f} mm; Tilt = {:+.2f} um; Tip = {:+.2f} um".format(group_1
 # group_1.move_group_relative([+0.05,0.00,-0.05], realMove = False)
 # group_1.move_group_together(0.3,realMove = False)
 # group_1.return_centroid()
-# group_1.zero_group(realMove = True)

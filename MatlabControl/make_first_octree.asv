@@ -17,7 +17,7 @@ tilts = [-300,+270]; %um
 tips =  [-300,+270]; %um
 centroid_pos = 6.46; %mm
 cells_per_axis = 3;
-filedir = 'Z:\Data\LJK\PM5\September2021\Sample231\Octree1B\';
+filedir = 'Z:\Data\LJK\PM5\September2021\Sample231\Octree1A\';
 
 dtilt = range(tilts)/cells_per_axis;
 tilt_vals = tilts(1)+dtilt/2:dtilt:tilts(2);

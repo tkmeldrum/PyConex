@@ -11,16 +11,21 @@ clc
 close all
 
 %% user defined parameters
-params.gamma = 42.577;
-params.G = 23.87; 
-params.zf = 4;
+gamma = 42.577;
+G = 23.87; 
+zf = 4;
 
 [output_positions_filename,filedir] = uigetfile('*.txt');
 
+% output_positions_filename = 'output_positions.txt';
+% filedir = '/Volumes/ISC1026/Data/LJK/PM5/October2021/Sample249/Octree_TestA/';
+
 % filedir = '/Volumes/ISC1026/Data/TKM/PM5/June2021/TipTilt/Sample249_auto/CPMG_series2/';
-main_title = 'test';
+main_title = 'OctreeK';
 showfigs = 1;
 calc_next_octree = 0;
+write_best_pos_info =0;
+% best_pos_file = '/Volumes/ISC1026/Data/LJK/PM5/October2021/Sample249/best_position_datainput_positions.txt';
 
 % output_positions_filename = [filedir,'input_positions.txt'];
 
@@ -51,7 +56,7 @@ graph_order = sortrows(input_pos_data,3,'descend');
 
 for ii = 1:nPos_in
     filelist{ii} = [filedir,num2str(ii),filesep];
-    [echoVec,z,spatialdata(:,:,ii),timedata(:,:,ii),params,~] = readKeaForFTT2(filelist{ii},params);
+    [echoVec,z,spatialdata(:,:,ii),timedata(:,:,ii),params,~] = readKeaForFTT2(filelist{ii},G, gamma, zf);
     int_spatial(:,ii) = abs(squeeze(sum(spatialdata(:,:,ii),2)));
     dSA(:,ii) = diff(int_spatial(:,ii))./diff(z');
     [pks(ii),locs(ii),widths(ii),proms(ii)] = findpeaks(int_spatial(:,ii),'SortStr','descend','NPeaks',1);
@@ -66,14 +71,38 @@ best_dSA_data = positions_data(bestdSAPos,:)
 all_pks = reshape(pks,numel(tilts),numel(tips));
 all_widths = reshape(widths,numel(tilts),numel(tips));
 
-%%
+tilt_centroid = sum(max(int_spatial).*positions_data(:,3)')./sum(max(int_spatial));
+tip_centroid = sum(max(int_spatial).*positions_data(:,4)')./sum(max(int_spatial));
 
+sprintf('Centroid = %3.0f µm tilt, %3.0f µm tip',tilt_centroid,tip_centroid)
+
+%%
+[z_recon,best_recon_pos] = low_pass_tilt_tip_filter(tilts,tips,all_pks,0.15);
+% best_recon_data = positions_data(best_recon_pos,:);
+% [~,bestINTPos_recon] = max(max(z_recon,[],1));
+close all
 
 pp = figure(5);
-% subplot(1,2,1)
-surf(tips,flipud(tilts),all_pks); %,'FaceColor','none')
+subplot(1,2,1)
+hold on
+surf(tips,tilts,all_pks); %,'FaceColor','none')
+plot(best_INT_data(4),best_INT_data(3),'r*')
+plot(best_dSA_data(4),best_dSA_data(3),'b*')
+plot(tip_centroid,tilt_centroid,'g*')
 shading interp
-view([0 90])
+view([0 -90])
+xlabel('tips [um]')
+ylabel('tilts [um]')
+
+subplot(1,2,2)
+hold on
+surf(tips,tilts,z_recon); %,'FaceColor','none')
+plot(best_INT_data(4),best_INT_data(3),'r*')
+plot(best_dSA_data(4),best_dSA_data(3),'b*')
+plot(tips(best_recon_pos(2)),tilts(best_recon_pos(1)),'k*');
+plot(tip_centroid,tilt_centroid,'g*')
+shading interp
+view([0 -90])
 xlabel('tips [um]')
 ylabel('tilts [um]')
 
@@ -85,6 +114,10 @@ ylabel('tilts [um]')
 % ylabel('tilts [um]')
 
 pubgraph(pp)
+
+
+
+
 
 %%
 if showfigs == 1
@@ -154,3 +187,16 @@ if calc_next_octree == 1
     [next_positions, next_abs_pos] = make_next_octree(input_pos_data(next_Octree_ind,:),...
         tilts,tips,params,writedir2);
 end
+
+%%
+if write_best_pos_info == 1
+    formatSpec = '%s\n Best INT data = Ind %u, Centroid = %6.4f mm, Tilt = %6.4f µm, Tip = %6.4f\n Best dSA data = Ind %u, Centroid = %6.4f mm, Tilt = %6.4f µm, Tip = %6.4f\n\n';
+    
+    fileID = fopen(best_pos_file,'a');
+    fprintf(fileID,  formatSpec, main_title, best_INT_data, best_dSA_data );
+    fclose(fileID);
+end
+
+%%
+tilt_centroid = sum(sum(normalize(int_spatial,'range'),1).*positions_data(:,3)')./sum(sum(normalize(int_spatial,'range')));
+tip_centroid = sum(sum(normalize(int_spatial,'range'),1).*positions_data(:,4)')./sum(sum(normalize(int_spatial,'range')));

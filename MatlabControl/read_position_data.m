@@ -77,7 +77,19 @@ tip_centroid = sum(max(int_spatial).*positions_data(:,4)')./sum(max(int_spatial)
 sprintf('Centroid = %3.0f µm tilt, %3.0f µm tip',tilt_centroid,tip_centroid)
 
 %%
-[z_recon,best_recon_pos] = low_pass_tilt_tip_filter(tilts,tips,all_pks,0.15);
+
+rand_frac = 0;
+sel = randperm(numel(all_pks),round(rand_frac*numel(all_pks)));
+hold_pks = nan(size(all_pks));
+hold_pks(sel) = all_pks(sel);
+hold_pks = fillmissing(hold_pks,'constant',median(hold_pks(:),'omitnan'));
+
+[z_recon,best_recon_pos] = low_pass_tilt_tip_filter(tilts,tips,hold_pks,0.05);
+
+[pks_recon,locs_recon] = findpeaks(z_recon(:),'SortStr','descend','NPeaks',1);
+best_recon_data = positions_data(locs_recon,:);
+
+
 % best_recon_data = positions_data(best_recon_pos,:);
 % [~,bestINTPos_recon] = max(max(z_recon,[],1));
 close all
@@ -102,6 +114,9 @@ plot(best_dSA_data(4),best_dSA_data(3),'b*')
 plot(tips(best_recon_pos(2)),tilts(best_recon_pos(1)),'k*');
 plot(tip_centroid,tilt_centroid,'g*')
 shading interp
+% for ii = 1:size(best_recon_data,1)
+%     plot(best_recon_data(ii,4),best_recon_data(ii,3),'k*');
+% end
 view([0 -90])
 xlabel('tips [um]')
 ylabel('tilts [um]')

@@ -6,6 +6,14 @@ z = all_pks;
 z_filt = exp(-(((1:numel(xgrid))-(numel(xgrid)+1)/2).^2/(FWHMf*round(numel(xgrid))^2/(4*log(2)))+...
                ((1:numel(ygrid))'-(numel(ygrid)+1)/2).^2/(FWHMf*round(numel(ygrid))^2/(4*log(2)))));
            
+% if rand_frac < 1
+%    sel = randi(numel(all_pks),round(rand_frac*numel(all_pks)),1);
+% %    [row,col] = ind2sub(size(all_pks),sel);
+%    hold_pks = nan(size(all_pks));
+%    hold_pks(sel) = all_pks(sel);
+%    hold_pks = interp2(xgrid,ygrid,hold_pks,xgrid,ygrid);
+%     
+% end
 % xspread = max(1,round(numel(xgrid)/10));
 % yspread = max(1,round(numel(ygrid)/10));
 

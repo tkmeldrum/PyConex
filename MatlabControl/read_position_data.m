@@ -78,18 +78,18 @@ sprintf('Centroid = %3.0f µm tilt, %3.0f µm tip',tilt_centroid,tip_centroid)
 
 %%
 
-rand_frac = 0;
-sel = randperm(numel(all_pks),round(rand_frac*numel(all_pks)));
-hold_pks = nan(size(all_pks));
-hold_pks(sel) = all_pks(sel);
-hold_pks = fillmissing(hold_pks,'constant',median(hold_pks(:),'omitnan'));
+% rand_frac = 0;
+% sel = randperm(numel(all_pks),round(rand_frac*numel(all_pks)));
+% hold_pks = nan(size(all_pks));
+% hold_pks(sel) = all_pks(sel);
+% hold_pks = fillmissing(hold_pks,'constant',median(hold_pks(:),'omitnan'));
 
-[z_recon,best_recon_pos] = low_pass_tilt_tip_filter(tilts,tips,hold_pks,0.05);
+[z_recon,best_recon_pos] = low_pass_tilt_tip_filter(tilts,tips,all_pks,0.05);
 
 [pks_recon,locs_recon] = findpeaks(z_recon(:),'SortStr','descend','NPeaks',1);
 best_recon_data = positions_data(locs_recon,:);
 
-
+%%
 % best_recon_data = positions_data(best_recon_pos,:);
 % [~,bestINTPos_recon] = max(max(z_recon,[],1));
 close all
@@ -108,7 +108,7 @@ ylabel('tilts [um]')
 
 subplot(1,2,2)
 hold on
-surf(tips,tilts,z_recon); %,'FaceColor','none')
+surf(tips,tilts,z_recon{1}); %,'FaceColor','none')
 plot(best_INT_data(4),best_INT_data(3),'r*')
 plot(best_dSA_data(4),best_dSA_data(3),'b*')
 plot(tips(best_recon_pos(2)),tilts(best_recon_pos(1)),'k*');
@@ -131,7 +131,35 @@ ylabel('tilts [um]')
 pubgraph(pp)
 
 
+%%
+close all
+n_steps = 20;
+oo = figure(1);
+for lll = 1:n_steps-1
 
+[z_final,z_std,max_std] = random_sparse_tilttip(tilts,tips,all_pks,lll/n_steps,100);
+subplot(5,5,lll)
+hold on
+surf(tips,tilts,z_std)
+colormap(flipud(gray))
+% caxis reverse
+if lll == 1
+    cl = caxis;
+end
+if lll == n_steps
+    colorbar
+end
+title(['frac=',num2str(lll/n_steps),', max=',num2str(max_std)])
+caxis([0 max(cl)])
+shading interp
+contour(tips,tilts,z_final,10,'-r')
+
+view([0 -90])
+xlabel('tips [um]')
+ylabel('tilts [um]')
+end
+sgtitle('Sparse, random subset of tilt/tip space; std/mean frac')
+pubgraph(oo)
 
 
 %%

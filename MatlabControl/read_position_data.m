@@ -108,7 +108,7 @@ else
 end
 
 [pks_recon,locs_recon] = findpeaks(z_recon(:),'SortStr','descend','NPeaks',1);
-best_recon_data = positions_data(locs_recon,:);
+% best_recon_data = positions_data(locs_recon,:);
 
 %%
 % best_recon_data = positions_data(best_recon_pos,:);
@@ -153,36 +153,37 @@ pubgraph(pp)
 
 
 %%
-close all
-n_steps = 20;
-oo = figure(1);
-for lll = 1:n_steps-1
-
-[z_final,z_std,max_std] = random_sparse_tilttip(tilts,tips,all_pks,lll/n_steps,100);
-subplot(5,5,lll)
-hold on
-surf(tips,tilts,z_std)
-colormap(flipud(gray))
-% caxis reverse
-if lll == 1
-    cl = caxis;
+if nPos_in == numel(tilts)*numel(tips)
+%     close all
+    n_steps = 20;
+    oo = figure(1);
+    for lll = 1:n_steps-1
+        
+        [z_final,z_std,max_std,tilt_tip_stats(lll,:)] = random_sparse_tilttip(tilts,tips,all_pks,lll/n_steps,100);
+        subplot(floor(sqrt(n_steps)),n_steps/floor(sqrt(n_steps)),lll)
+        hold on
+        surf(tips,tilts,z_std)
+        colormap(flipud(gray))
+        % caxis reverse
+        if lll == 1
+            cl = caxis;
+        end
+        if lll == n_steps
+            colorbar
+        end
+        title(['frac=',num2str(lll/n_steps),', max=',num2str(max_std)])
+        caxis([0 max(cl)])
+        shading interp
+        contour(tips,tilts,z_final,10,'-r')
+        
+        view([0 -90])
+        xlabel('tips [um]')
+        ylabel('tilts [um]')
+    end
+    sgtitle('Sparse, random subset of tilt/tip space; std/mean frac')
+    pubgraph(oo)
+    
 end
-if lll == n_steps
-    colorbar
-end
-title(['frac=',num2str(lll/n_steps),', max=',num2str(max_std)])
-caxis([0 max(cl)])
-shading interp
-contour(tips,tilts,z_final,10,'-r')
-
-view([0 -90])
-xlabel('tips [um]')
-ylabel('tilts [um]')
-end
-sgtitle('Sparse, random subset of tilt/tip space; std/mean frac')
-pubgraph(oo)
-
-
 %%
 if showfigs == 1
     dSAylims = [min(min(dSA,[],1)) max(max(dSA,[],1))];

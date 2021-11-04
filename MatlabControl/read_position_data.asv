@@ -100,12 +100,10 @@ sprintf('Centroid = %3.0f µm tilt, %3.0f µm tip',tilt_centroid,tip_centroid)
 % hold_pks = nan(size(all_pks));
 % hold_pks(sel) = all_pks(sel);
 % hold_pks = fillmissing(hold_pks,'constant',median(hold_pks(:),'omitnan'));
-if nPos_in ~= numel(tilts)*numel(tips)
-    all_pks_filled = fillmissing(all_pks,'constant',median(all_pks(:),'omitnan'));
-    [z_recon,best_recon_pos] = low_pass_tilt_tip_filter(tilts,tips,all_pks_filled,0.05);
-else
-    [z_recon,best_recon_pos] = low_pass_tilt_tip_filter(tilts,tips,all_pks,0.05);
-end
+
+all_pks = fillmissing(all_pks,'constant',median(all_pks(:),'omitnan'));
+
+[z_recon,best_recon_pos] = low_pass_tilt_tip_filter(tilts,tips,all_pks,0.05);
 
 [pks_recon,locs_recon] = findpeaks(z_recon(:),'SortStr','descend','NPeaks',1);
 best_recon_data = positions_data(locs_recon,:);
@@ -118,7 +116,7 @@ close all
 pp = figure(5);
 subplot(1,2,1)
 hold on
-mesh(tips,tilts,all_pks); %,'FaceColor','none')
+surf(tips,tilts,all_pks); %,'FaceColor','none')
 plot(best_INT_data(4),best_INT_data(3),'r*')
 plot(best_dSA_data(4),best_dSA_data(3),'b*')
 plot(tip_centroid,tilt_centroid,'g*')
@@ -129,7 +127,7 @@ ylabel('tilts [um]')
 
 subplot(1,2,2)
 hold on
-mesh(tips,tilts,z_recon); %,'FaceColor','none')
+surf(tips,tilts,z_recon); %,'FaceColor','none')
 plot(best_INT_data(4),best_INT_data(3),'r*')
 plot(best_dSA_data(4),best_dSA_data(3),'b*')
 plot(tips(best_recon_pos(2)),tilts(best_recon_pos(1)),'k*');

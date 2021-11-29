@@ -11,9 +11,14 @@ clc
 close all
 
 %% user defined parameters
-gamma = 42.577;
-G = 23.87; 
-zf = 4;
+topparams.gamma = 42.577;
+topparams.G = 23.87; 
+topparams.zf = 4;
+topparams.ILTminmax = [1e-5 1e-1];
+topparams.nrILTSteps = 200;
+topparams.alpha = 1e8;
+topparams.zlim = [-150 150];
+topparams.kernel = 'exp(-h/T)';
 
 [output_positions_filename,filedir] = uigetfile('*.txt');
 
@@ -56,6 +61,7 @@ for ii = 1:size(input_pos_data,1)
     input_pos_data(ii,6) = find(input_pos_data(ii,4)==tips);
 end
 
+
 %% process data with FT
 [rowsout, colsout] = prep_for_subplot(nPos_in);
 
@@ -65,7 +71,28 @@ for ii = 1:nPos_in
     int_spatial(:,ii) = abs(squeeze(sum(spatialdata(:,:,ii),2)));
     dSA(:,ii) = diff(int_spatial(:,ii))./diff(z');
     [pks(ii),locs(ii),widths(ii),proms(ii)] = findpeaks(int_spatial(:,ii),'SortStr','descend','NPeaks',1);
+    for jj = 1:numel(z)
+        [spectrum(:,ii,jj),tau] = run_1DILT(abs(spatialdata(jj,:,ii)'),echoVec',topparams);
+        MLT2(ii,jj) = mean_log(tau',spectrum(:,ii,jj));
+    end
 end
+
+
+kk = figure(6);
+for ii = 1:nPos_in
+    subplot(numel(tilts),numel(tips),ii);
+    plot(z,MLT2(graph_order(ii,1),:));
+    ylim(1.1*topparams.ILTminmax);
+    xlim(1.1*topparams.zlim);
+    set(gca,'YScale','log');
+    title([num2str(graph_order(ii,3)),'/',num2str(graph_order(ii,4))]);
+%     text(-500,dINTylims(2),[num2str(graph_order(ii,3)),',',num2str(graph_order(ii,4))]);
+%     text(400,dINTylims(2),[num2str(graph_order(ii,1))],'Color','r');
+end
+sgtitle('MLT2 vs z for tilt/tip combos')
+pubgraph(kk)
+
+%%
 dz = z(2:end)'-(z(2)-z(1))/2;
 
 [~,bestINTPos] = max(max(int_spatial,[],1));
@@ -118,7 +145,7 @@ close all
 pp = figure(5);
 subplot(1,2,1)
 hold on
-mesh(tips,tilts,all_pks); %,'FaceColor','none')
+surf(tips,tilts,all_pks); %,'FaceColor','none')
 plot(best_INT_data(4),best_INT_data(3),'r*')
 plot(best_dSA_data(4),best_dSA_data(3),'b*')
 plot(tip_centroid,tilt_centroid,'g*')
@@ -129,7 +156,7 @@ ylabel('tilts [um]')
 
 subplot(1,2,2)
 hold on
-mesh(tips,tilts,z_recon); %,'FaceColor','none')
+surf(tips,tilts,z_recon); %,'FaceColor','none')
 plot(best_INT_data(4),best_INT_data(3),'r*')
 plot(best_dSA_data(4),best_dSA_data(3),'b*')
 plot(tips(best_recon_pos(2)),tilts(best_recon_pos(1)),'k*');

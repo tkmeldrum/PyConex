@@ -11,13 +11,13 @@ clc
 close all
 
 %% user defined parameters
-actuator_lims = [0 10];
+actuator_lims = [0 12];
 
-tilts = [-300,+270]; %um
-tips =  [-300,+270]; %um
-centroid_pos = 6.46; %mm
-cells_per_axis = 3;
-filedir = 'Z:\Data\LJK\PM5\September2021\Sample231\Octree1B\';
+tilts = [-225, +200]; %um
+tips =  [-225, +200]; %um
+centroid_pos = 6.8; %mm
+cells_per_axis = 5;
+filedir = 'Z:\Data\LJK\PM5\October2021\Sample217\Octree_TestA\';
 
 dtilt = range(tilts)/cells_per_axis;
 tilt_vals = tilts(1)+dtilt/2:dtilt:tilts(2);

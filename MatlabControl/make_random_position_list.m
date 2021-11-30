@@ -12,24 +12,19 @@ close all
 
 % user defined parameters
 actuator_lims = [0 12];
+random_frac = 0.8;
 
-tilts = linspace(-250,300,17); %linspace(-260,300,15); %um
-tips =  linspace(-320,293,17); %linspace(-260,300,15); %um
-centroids = 6.70; %6.65; %mm
+tilts = -260:35:300; %um
+tips =  -260:35:300; %um
+centroids = 6.65; %mm
 
-filedir = 'Z:\Data\LJK\PM5\November2021\Sample174\CPMGSeriesA\';
+filedir = 'Z:\Data\LJK\PM5\November2021\Sample215\RandomCPMGSeriesB\';
 
 positions = make_positions_mesh(tilts,tips,centroids);
-
-% positions = [(1:22)',ones(22,1)*centroids, tilts, tips];
-
 [positions, abs_pos] = check_valid_actuator_moves(positions,actuator_lims);
-%%
+
+sel = sortrows(randperm(size(positions,1),round(size(positions,1)*random_frac))');
+positions = [(1:numel(sel))',positions(sel,2:4)];
+abs_pos = abs_pos(sel,:);
 write_input_positions(filedir,positions)
 plot_actuator_limits(positions,actuator_lims)
-
-
-
-
-
-

@@ -16,8 +16,8 @@ topparams.G = 23.87;
 topparams.zf = 4;
 topparams.ILTminmax = [1e-5 1e-1];
 topparams.nrILTSteps = 200;
-topparams.alpha = 1e8;
-topparams.zlim = [-150 150];
+topparams.alpha = 1e7;
+topparams.zlim = [-150 250];
 topparams.kernel = 'exp(-h/T)';
 
 [output_positions_filename,filedir] = uigetfile('*.txt');
@@ -26,7 +26,7 @@ topparams.kernel = 'exp(-h/T)';
 % filedir = '/Volumes/ISC1026/Data/LJK/PM5/October2021/Sample249/Octree_TestA/';
 
 % filedir = '/Volumes/ISC1026/Data/TKM/PM5/June2021/TipTilt/Sample249_auto/CPMG_series2/';
-main_title = 'OctreeK';
+main_title = 'TiltTip Read A';
 showfigs = 0;
 calc_next_octree = 0;
 write_best_pos_info =0;
@@ -67,7 +67,7 @@ end
 
 for ii = 1:nPos_in
     filelist{ii} = [filedir,num2str(ii),filesep];
-    [echoVec,z,spatialdata(:,:,ii),timedata(:,:,ii),params,~] = readKeaForFTT2(filelist{ii},G, gamma, zf);
+    [echoVec,z,spatialdata(:,:,ii),timedata(:,:,ii),params,~] = readKeaForFTT2(filelist{ii},topparams.G, topparams.gamma, topparams.zf);
     int_spatial(:,ii) = abs(squeeze(sum(spatialdata(:,:,ii),2)));
     dSA(:,ii) = diff(int_spatial(:,ii))./diff(z');
     [pks(ii),locs(ii),widths(ii),proms(ii)] = findpeaks(int_spatial(:,ii),'SortStr','descend','NPeaks',1);
@@ -292,3 +292,6 @@ end
 %%
 tilt_centroid = sum(sum(normalize(int_spatial,'range'),1).*positions_data(:,3)')./sum(sum(normalize(int_spatial,'range')));
 tip_centroid = sum(sum(normalize(int_spatial,'range'),1).*positions_data(:,4)')./sum(sum(normalize(int_spatial,'range')));
+
+close all
+save([filedir,'processed_position_data_',datestr(now,'ddmmmyyyy'),'.mat']);

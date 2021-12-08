@@ -2,14 +2,14 @@ clear
 clc
 close all
 
-load('/Volumes/acstore-groups/ISC1026/Data/LJK/PM5/December2021/Sample231/TiltTipCheck/processed_position_data_07Dec2021.mat');
+load('/Volumes/ISC1026/Data/LJK/PM5/October2021/Sample212/TiltCheck/processed_position_data_07Dec2021.mat');
 dMLT2 = diff(MLT2');
 
-topparams.zlim = [-100 50];
+% topparams.zlim = [-100 50];
 %%
 close all
 
-loopinds = 1:11; %for changing tilt
+loopinds = 1:7; %for changing tilt
 
 hh = figure(1);
 pubgraph(hh)
@@ -76,7 +76,7 @@ sgtitle('changing tilt')
 
 % close all
 
-loopinds = 12:22; %for changing tip
+loopinds = 6:10; %for changing tip
 
 gg = figure(2);
 pubgraph(gg)
@@ -140,12 +140,15 @@ ylim([-2e-4 2e-4])
 sgtitle('changing tip')
 
 %%
+% if isvar(mm)
 close(mm)
+% end
+
 mm = figure(3);
 set(gcf,'Position',[100 960 2000 200])
 pubgraph(mm)
 % subplot(2,1,1)
-loopinds = 1:11;
+loopinds = 1:7;
 % zshift = -50:10:50;
 
 tiledlayout(1,numel(loopinds), 'Padding', 'none', 'TileSpacing', 'compact');
@@ -184,12 +187,12 @@ sgtitle('tilts')
 print([filedir,'tilt_comp.png'],'-dpng');
 print([filedir,'tilt_comp.eps'],'-depsc2');
 
-close(nn)
+% close(nn)
 nn = figure(4);
 set(gcf,'Position',[100 860 2000 200])
 pubgraph(nn)
 % subplot(2,1,1)
-loopinds = 12:22;
+loopinds = 6:10;
 % zshift = -50:10:50;
 
 tiledlayout(1,numel(loopinds), 'Padding', 'none', 'TileSpacing', 'compact');

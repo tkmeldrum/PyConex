@@ -23,16 +23,16 @@ validgrid = (abs_pos(:,1)>max(actuator_lims) | abs_pos(:,1)<min(actuator_lims)) 
             (abs_pos(:,2)>max(actuator_lims) | abs_pos(:,2)<min(actuator_lims)) +...
             (abs_pos(:,3)>max(actuator_lims) | abs_pos(:,3)<min(actuator_lims));
 
-hh = figure(nn);
-hold on
-surf(all_tips,all_tilts,reshape(-validgrid,numel(all_tilts),numel(all_tips)));
-scatter(positions(:,4),positions(:,3),20*ones(size(positions,1),1),'red','filled');
-quiver(tips,tilts,U,V)
-shading flat
-xlabel('tips')
-ylabel('tilts')
-view([0 90])
-pubgraph(hh)
+% hh = figure(nn);
+% hold on
+% surf(all_tips,all_tilts,reshape(-validgrid,numel(all_tilts),numel(all_tips)));
+% scatter(positions(:,4),positions(:,3),20*ones(size(positions,1),1),'red','filled');
+% quiver(tips,tilts,U,V)
+% shading flat
+% xlabel('tips')
+% ylabel('tilts')
+% view([0 90])
+% pubgraph(hh)
 
 
 end

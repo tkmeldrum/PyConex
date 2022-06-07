@@ -31,7 +31,8 @@ next_octree = 0;
 
 %choose directory containing output_positions.txt, stamps.txt, and
 %input_positions.txt data files
-readdir = [uigetdir(pwd,'Choose directory with output data.'),filesep];
+% readdir = [uigetdir(pwd,'Choose directory with output data.'),filesep];
+readdir = '/Volumes/ISC1026/Data/LJK/PM5/June2022/TiltTip/OliveOil/OctreeA/';
 
 % read files
 [positions_data,tilts,tips,params,input_pos_data,time_data] = read_tilttip_text_files(readdir,params);

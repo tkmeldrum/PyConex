@@ -24,11 +24,11 @@ topparams.actuator_lims = [0 12];
 % [output_positions_filename,filedir] = uigetfile('*.txt');
 
 output_positions_filename = 'output_positions.txt';
-filedir = 'Z:\Data\LJK\PM5\June2022\TiltTip\OliveOilPaper\OctreeF\';
-writedir2 = 'Z:\Data\LJK\PM5\June2022\TiltTip\OliveOilPaper\OctreeG\';
+filedir = 'Z:\Data\LJK\PM5\June2022\TiltTip\OliveOil2Paper\OctreeF\';
+writedir2 = 'Z:\Data\LJK\PM5\June2022\TiltTip\OliveOil2Paper\OctreeEnd\';
 
 % filedir = '/Volumes/ISC1026/Data/TKM/PM5/June2021/TipTilt/Sample249_auto/CPMG_series2/';
-main_title = '4.34 mm Olive Oil Octree F';
+main_title = '4.24 mm Olive Oil 2 Octree F';
 showfigs = 0;
 calc_next_octree = 0;
 write_best_pos_info =0;
@@ -91,7 +91,7 @@ params.actuator_lims = topparams.actuator_lims;
 %% get just signal intensity vs z, smooth, and get d(S)/dz
 
 int_spatial = abs(squeeze(sum(spatialdata,2)));
-int_smoothed = smoothdata(int_spatial,'gaussian',round(size(int_spatial,1)/100));
+int_smoothed = smoothdata(int_spatial,'gaussian',round(size(int_spatial,1)/50));
 dSA_smoothed = diff(int_smoothed)./diff(z');
 dSA = diff(int_spatial)./diff(z');
 dz = z(2:end)'-(z(2)-z(1))/2;

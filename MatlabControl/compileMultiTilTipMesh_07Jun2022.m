@@ -12,9 +12,9 @@ topparams.gamma = 42.577;
 topparams.G = 23.87;
 topparams.zf = 4;
 
-basedir = 'Z:\Data\LJK\PM5\June2022\TiltTip\OliveOil2Paper\Octree';
-printdir = 'Z:\Data\LJK\PM5\June2022\TiltTip\OliveOil2Paper\';
-append = ['A','B','C','D','E','F'];
+basedir = 'Z:\Data\LJK\PM5\June2022\TiltTip\OliveOil3Paper\Octree';
+printdir = 'Z:\Data\LJK\PM5\June2022\TiltTip\OliveOil3Paper\';
+append = ['A','B','C','D','E'];
 for ii = 1:numel(append)
 dirlist{ii} = [basedir append(ii) '\'];
 end
@@ -91,7 +91,7 @@ ylabel('TIP')
 colormap(flipud(parula))
 shading interp
 view([90 -90])
-title('Olive Oil, Paper2, Octree A-F')
+title('Olive Oil, 3Paper, Octree A-E')
 pubgraph(hh)
 
 print([printdir,'multiGrid.png'],'-dpng')

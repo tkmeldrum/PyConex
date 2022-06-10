@@ -17,18 +17,18 @@ topparams.zf = 4;
 % topparams.ILTminmax = [1e-5 1e-1];
 % topparams.nrILTSteps = 200;
 % topparams.alpha = 1e7;
-topparams.zlim = [-75 75];
+topparams.zlim = [-150 150];
 topparams.actuator_lims = [0 12];
 % topparams.kernel = 'exp(-h/T)';
 
 % [output_positions_filename,filedir] = uigetfile('*.txt');
 
 output_positions_filename = 'output_positions.txt';
-filedir = 'Z:\Data\LJK\PM5\June2022\TiltTip\OliveOil2Paper\OctreeF\';
-writedir2 = 'Z:\Data\LJK\PM5\June2022\TiltTip\OliveOil2Paper\OctreeEnd\';
+filedir = 'Z:\Data\TKM\PM5\June2022\HotGlue\OctreeA\';
+writedir2 = 'Z:\Data\TKM\PM5\June2022\HotGlue\OctreeB\';
 
 % filedir = '/Volumes/ISC1026/Data/TKM/PM5/June2021/TipTilt/Sample249_auto/CPMG_series2/';
-main_title = '4.24 mm Olive Oil 2 Octree F';
+main_title = '3.95 mm hot glue postmelt A';
 showfigs = 0;
 calc_next_octree = 0;
 write_best_pos_info =0;

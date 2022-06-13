@@ -14,10 +14,10 @@ close all
 topparams.gamma = 42.577;
 topparams.G = 23.87; 
 topparams.zf = 2;
-topparams.zlim = [-75 75];
+topparams.zlim = [-150 150];
 
-filedir = '/Volumes/acstore-groups/ISC1026/Data/LJK/PM5/June2022/TiltTip/OliveOil/CPMG_ONOFFREV/ON/';
-main_title = '4.44 mm Olive Oil ON';
+filedir = '/Users/tyler/Desktop/TiltTip/HotGlue/CPMG_ONOFF/ON/';
+main_title = '3.95 mm Hot Glue (postmelt) ON1';
 
 nDir = count_directories(filedir);
 

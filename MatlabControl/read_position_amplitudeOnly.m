@@ -24,11 +24,11 @@ topparams.actuator_lims = [0 12];
 % [output_positions_filename,filedir] = uigetfile('*.txt');
 
 output_positions_filename = 'output_positions.txt';
-filedir = 'Z:\Data\TKM\PM5\June2022\HotGlue\OctreeA\';
-writedir2 = 'Z:\Data\TKM\PM5\June2022\HotGlue\OctreeB\';
+filedir = 'Z:\Data\TKM\PM5\June2022\HotGlue\OctreeD\';
+writedir2 = 'Z:\Data\TKM\PM5\June2022\HotGlue\OctreeE\';
 
 % filedir = '/Volumes/ISC1026/Data/TKM/PM5/June2021/TipTilt/Sample249_auto/CPMG_series2/';
-main_title = '3.95 mm hot glue postmelt A';
+main_title = '3.95 mm hot glue postmelt D';
 showfigs = 0;
 calc_next_octree = 0;
 write_best_pos_info =0;
@@ -91,7 +91,7 @@ params.actuator_lims = topparams.actuator_lims;
 %% get just signal intensity vs z, smooth, and get d(S)/dz
 
 int_spatial = abs(squeeze(sum(spatialdata,2)));
-int_smoothed = smoothdata(int_spatial,'gaussian',round(size(int_spatial,1)/50));
+int_smoothed = smoothdata(int_spatial,'gaussian',round(size(int_spatial,1)/100));
 dSA_smoothed = diff(int_smoothed)./diff(z');
 dSA = diff(int_spatial)./diff(z');
 dz = z(2:end)'-(z(2)-z(1))/2;
@@ -115,7 +115,7 @@ for ii = 1:nPos_in
 %     FWHM(ii) = 2*sqrt(2*log(2))*aa(3);
 end
 
-[~,best_dSA_pos] = min(fitvals(3,:)); 
+[~,best_dSA_pos] = min(abs(fitvals(3,:))); 
 best_dSA_data = positions_data(best_dSA_pos,:);
 
 %% plot

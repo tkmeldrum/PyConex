@@ -12,9 +12,9 @@ topparams.gamma = 42.577;
 topparams.G = 23.87;
 topparams.zf = 4;
 
-basedir = 'Z:\Data\LJK\PM5\June2022\TiltTip\OliveOil3Paper\Octree';
-printdir = 'Z:\Data\LJK\PM5\June2022\TiltTip\OliveOil3Paper\';
-append = ['A','B','C','D','E'];
+basedir = 'Z:\Data\TKM\PM5\June2022\HotGlue\Octree';
+printdir = 'Z:\Data\TKM\PM5\June2022\HotGlue\';
+append = ['A','B','C','D'];
 for ii = 1:numel(append)
 dirlist{ii} = [basedir append(ii) '\'];
 end

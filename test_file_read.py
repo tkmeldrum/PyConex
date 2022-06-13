@@ -3,9 +3,9 @@ from move_multiple import ConexGroup
 import numpy as np
 import time, datetime, serial
 
-filename_in = r"Z:\Data\TKM\PM5\June2022\HotGlue\OctreeA\input_positions.txt"
-filename_out = r"Z:\Data\TKM\PM5\June2022\HotGlue\OctreeA\output_positions.txt"
-timestamps_out = r"Z:\Data\TKM\PM5\June2022\HotGlue\OctreeA\stamps.txt"
+filename_in = r"Z:\Data\TKM\PM5\June2022\HotGlue\CPMG_ONOFF3\input_positions.txt"
+filename_out = r"Z:\Data\TKM\PM5\June2022\HotGlue\CPMG_ONOFF3\output_positions.txt"
+timestamps_out = r"Z:\Data\TKM\PM5\June2022\HotGlue\CPMG_ONOFF3\stamps.txt"
 # exptime = 1024*0.35 + 9
 
 serialport = 'COM10'

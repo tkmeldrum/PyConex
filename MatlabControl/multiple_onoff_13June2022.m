@@ -6,12 +6,12 @@ params.zf = 4;
 params.gamma = 42.577; %MHz/T
 params.G = 23.87; %T/m
 T2kernel = 'exp(-h/T)';
-figdir = '/Users/tyler/Desktop/TiltTip/HotGlue/CPMG_ONOFF1/';
+figdir = '/Volumes/acstore-groups/ISC1026/Data/TKM/PM5/June2022/TiltTip/HotGlue/CPMG_ONOFF3/';
 
-dirname = '/Users/tyler/Desktop/TiltTip/HotGlue/CPMG_ONOFF1/ON/';
+dirname = '/Volumes/acstore-groups/ISC1026/Data/TKM/PM5/June2022/TiltTip/HotGlue/CPMG_ONOFF3/ON/';
 ON = runmultipleonoff_tilttip(dirname,params,T2kernel);
 
-dirname = '/Users/tyler/Desktop/TiltTip/HotGlue/CPMG_ONOFF1/OFF/';
+dirname = '/Volumes/acstore-groups/ISC1026/Data/TKM/PM5/June2022/TiltTip/HotGlue/CPMG_ONOFF3/OFF/';
 OFF = runmultipleonoff_tilttip(dirname,params,T2kernel);
 
 %%
@@ -31,7 +31,8 @@ plot(OFF.z_vec,OFF.MLT2,'--k','LineWidth',1)
 plot(OFF.z_vec,OFF.meanMLT2,'-k','LineWidth',2)
 set(gca,'YScale','log')
 xlabel('position [µm]')
-xlim(ON.params.zlims)
+xlim([0 75])
+% xlim(ON.params.zlims)
 ylabel('T2 [s]')
 
 % pubgraph(hh)
@@ -40,10 +41,14 @@ ylabel('T2 [s]')
 % gg = figure(2);
 subplot(2,1,1)
 hold on
-plot(ON.z_vec,log10(ON.meanMLT2)-log10(OFF.meanMLT2),'-k','LineWidth',2)
-line(ON.params.zlims,[0 0],'Color','blue')
+plot(ON.z,sum(abs(ON.spatialdata(:,:,2)),2),'-r')
+plot(OFF.z,sum(abs(OFF.spatialdata(:,:,2)),2),'-k')
+% plot(ON.z_vec,log10(ON.meanMLT2)-log10(OFF.meanMLT2),'-k','LineWidth',2)
+% line(ON.params.zlims,[0 0],'Color','blue')
 % xlabel('position [µm]')
-xlim(ON.params.zlims)
-ylabel('log10 excess T2 (ON-OFF) [s]')
+% xlim(ON.params.zlims)
+xlim([0 75])
+% ylabel('log10 excess T2 (ON-OFF) [s]')
 pubgraph(hh)
-print([figdir,'ONOFFcomp.png'],'-dpng');
+
+% print([figdir,'ONOFFcomp.png'],'-dpng');

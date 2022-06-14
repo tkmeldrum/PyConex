@@ -15,9 +15,9 @@ actuator_lims = [0 12];
 
 tilts = [-150, +150]; %um
 tips =  [-150, +150]; %um
-centroid_pos = 3.95; %mm
+centroid_pos = 4.62; %mm
 cells_per_axis = 3;
-filedir = 'Z:\Data\TKM\PM5\June2022\HotGlue\OctreeA\';
+filedir = 'Z:\Data\TKM\PM5\June2022\TiltTip\Epoxy168\OctreeA\';
 
 dtilt = range(tilts)/cells_per_axis;
 tilt_vals = tilts(1)+dtilt/2:dtilt:tilts(2);

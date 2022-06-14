@@ -24,11 +24,11 @@ topparams.actuator_lims = [0 12];
 % [output_positions_filename,filedir] = uigetfile('*.txt');
 
 output_positions_filename = 'output_positions.txt';
-filedir = 'Z:\Data\TKM\PM5\June2022\HotGlue\OctreeD\';
-writedir2 = 'Z:\Data\TKM\PM5\June2022\HotGlue\OctreeE\';
+filedir = 'Z:\Data\TKM\PM5\June2022\TiltTip\Epoxy168\OctreeA\';
+writedir2 = 'Z:\Data\TKM\PM5\June2022\TiltTip\Epoxy168\OctreeB\';
 
 % filedir = '/Volumes/ISC1026/Data/TKM/PM5/June2021/TipTilt/Sample249_auto/CPMG_series2/';
-main_title = '3.95 mm hot glue postmelt D';
+main_title = '4.62 mm Epoxy 168 A';
 showfigs = 0;
 calc_next_octree = 0;
 write_best_pos_info =0;
@@ -103,15 +103,19 @@ ft = fittype( '-a*exp(-(x-c)^2/(2*s^2))', 'independent', 'x', 'dependent', 'y' )
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Display = 'Off';
 opts.StartPoint = [0.1 0 10];
+opts.Lower = [0 -Inf 0];
     
     
 for ii = 1:nPos_in
     
     [xData, yData] = prepareCurveData( dz, dSA_smoothed(:,ii) );
     
+    [C,I] = min(dSA_smoothed(:,ii));
+    opts.StartPoint = [-C dz(I) 10];
     % Fit model to data.
     [mdl{ii}, gof{ii}] = fit( xData, yData, ft, opts );
     fitvals(:,ii) = coeffvalues(mdl{ii})';
+    fit_pred(:,ii) = feval(mdl{ii},dz);
 %     FWHM(ii) = 2*sqrt(2*log(2))*aa(3);
 end
 
@@ -159,11 +163,27 @@ pubgraph(pp)
 oo = figure(7);
 for ii = 1:nPos_in
     subplot(rowsout, colsout,ii)
+    hold on
     plot(dz,dSA_smoothed(:,ii))
+    plot(dz,fit_pred(:,ii),'-r')
     ylim([min(min(dSA_smoothed)) max(max(dSA_smoothed))])
+    title(num2str(ii))
 end
+
+qq = figure(8);
+for ii = 1:nPos_in
+    subplot(rowsout, colsout,ii)
+    hold on
+    plot(z,int_smoothed(:,ii))
+%     plot(dz,fit_pred(:,ii),'-r')
+    ylim([min(min(int_smoothed)) max(max(int_smoothed))])
+    title(num2str(ii))
+end
+
+
 
 save([filedir,'processed_position_data_',datestr(now,'ddmmmyyyy'),'.mat']);
 
 %%
+best_dSA_pos = 6;
 [next_positions, next_abs_pos] = make_next_octree(positions_data(best_dSA_pos,:),tilts,tips,params,writedir2);

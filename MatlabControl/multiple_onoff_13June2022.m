@@ -6,6 +6,7 @@ params.zf = 2;
 params.gamma = 42.577; %MHz/T
 params.G = 23.87; %T/m
 T2kernel = 'exp(-h/T)';
+
 figdir = 'Z:\Data\TKM\PM5\June2022\TiltTip\Epoxy31\CPMG_ONOFFBAD1\';
 
 dirname = 'Z:\Data\TKM\PM5\June2022\TiltTip\Epoxy31\CPMG_ONOFFBAD1\ON\';
@@ -51,7 +52,8 @@ plot(BAD.z_vec,BAD.meanMLT2,'-g','LineWidth',2)
 
 set(gca,'YScale','log')
 xlabel('position [µm]')
-xlim(ON.params.zlims)
+xlim([0 75])
+% xlim(ON.params.zlims)
 ylabel('T2 [s]')
 
 % pubgraph(hh)
@@ -71,4 +73,5 @@ legend('ON','OFF','REV','BAD')
 xlim(ON.params.zlims)
 ylabel('signal intensity [arb]')
 pubgraph(hh)
-print([figdir,'ONOFFcomp.png'],'-dpng');
+
+% print([figdir,'ONOFFcomp.png'],'-dpng');

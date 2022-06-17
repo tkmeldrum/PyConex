@@ -12,8 +12,8 @@ topparams.gamma = 42.577;
 topparams.G = 23.87;
 topparams.zf = 0;
 
-basedir = '/Users/tyler/Desktop/TiltTip/HotGlue/Octree';
-printdir = '/Users/tyler/Desktop/TiltTip/HotGlue/';
+basedir = '/Volumes/acstore-groups/ISC1026/Data/TKM/PM5/June2022/TiltTip/HotGlue/Octree';
+printdir = '/Volumes/acstore-groups/ISC1026/Data/TKM/PM5/June2022/TiltTip/HotGlue/';
 figtitle = 'Hot Glue, OctreeA2-D';
 append = {'A';'A2';'B';'C';'D'};
 for ii = 1:numel(append)

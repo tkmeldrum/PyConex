@@ -14,11 +14,12 @@ topparams.zf = 0;
 
 basedir = '/Volumes/acstore-groups/ISC1026/Data/TKM/PM5/June2022/TiltTip/HotGlue/Octree';
 printdir = '/Volumes/acstore-groups/ISC1026/Data/TKM/PM5/June2022/TiltTip/HotGlue/';
-figtitle = 'Hot Glue, OctreeA2-D';
-append = {'A';'A2';'B';'C';'D'};
+figtitle = 'HotGlue, OctreeA2-D';
+append = {'A2';'B';'C';'D'};
 for ii = 1:numel(append)
     dirlist{ii} = [basedir append{ii} filesep];
 end
+
 
 output_list = readMultiTiltTipPositions(dirlist);
 
@@ -39,6 +40,9 @@ tilt_min = min(tilts)-tilt_step/2;
 tip_min = min(tips)-tip_step/2;
 tilt_max = max(tilts)+tilt_step/2;
 tip_max = max(tips)+tip_step/2;
+
+tilt = [output_list.tilt]';
+tip = [output_list.tip]';
 %
 % for ii = 1:nOctreeLevels
 %     [X,Y] = meshgrid(tilt_min(ii):tilt_step(ii):tilt_max(ii),...
@@ -65,6 +69,8 @@ opts.Lower = [0 -Inf 0];
 % %     FWHM(ii) = 2*sqrt(2*log(2))*aa(3);
 % end
 
+          
+
 for ii = 1:numel(output_list)
     [echoVec{ii},z{ii},spatialdata{ii},timedata{ii},params(ii),~] = readKeaForFTT2(output_list(ii).dir,topparams.G,topparams.gamma,topparams.zf);
     int_spatial{ii} = abs(squeeze(sum(spatialdata{ii},2)));
@@ -74,19 +80,63 @@ for ii = 1:numel(output_list)
     dSA_smoothed{ii} = diff(int_smoothed{ii})./diff(z{ii}');
     
     dz{ii} = z{ii}(2:end)'-(z{ii}(2)-z{ii}(1))/2;
-    for jj = 1:size(dSA_smoothed{ii},2)
-        [xData, yData] = prepareCurveData( dz{ii}, dSA_smoothed{ii}(:,jj) );
+%     for jj = 1:size(dSA_smoothed{ii},2)
+        [xData, yData] = prepareCurveData( dz{ii}, dSA_smoothed{ii});
         
         % Fit model to data.
         [mdl, gof] = fit( xData, yData, ft, opts );
         fitvals = coeffvalues(mdl)';
-        FWHM(ii,jj) = 2*sqrt(2*log(2))*fitvals(3);
-    end
+        FWHM(ii) = 2*sqrt(2*log(2))*fitvals(3);
+        fit_pred{ii} = feval(mdl,dz{ii});
+%     end
     
+  
     %     [pks(ii),locs(ii),widths(ii),proms(ii)] = findpeaks(int_spatial{ii},'SortStr','descend','NPeaks',1);
     %     pks_norm(ii) = pks(ii)/sqrt(params(ii).nrScans);
 end
 
+%%
+nRows = numel(append);
+nCols = numel(output_list)/nRows;
+FWHM = reshape(FWHM,nCols,nRows);
+int_minmax = [min(min([int_smoothed{:}])) max(max([int_smoothed{:}]))];
+dSA_minmax = [min(min([dSA_smoothed{:}])) max(max([dSA_smoothed{:}]))];
+[~,I] = min(FWHM);
+I = I + nCols*(0:numel(I)-1);
+zlims = [-100 100];
+%%
+
+close all
+pp = tight_subplot(nRows,nCols,0.005,0.005,0.005);
+for ii = 1:nRows*nCols
+    axes(pp(ii));
+    hold on
+    yyaxis left
+    yticks([])
+    plot(z{ii},int_spatial{ii},'-k')
+%     if ismember(ii, I) 
+%         plot(z{ii},int_spatial{ii},'-r')
+%     end
+    ylim(int_minmax)
+    xlim(zlims)
+    
+    yyaxis right
+    yticks([])
+    hold on
+%     plot(dz{ii},dSA_smoothed{ii},'.b')
+    plot(dz{ii},fit_pred{ii},'-b')
+    if ismember(ii, I) 
+%         plot(dz{ii},dSA_smoothed{ii},'.r')
+        plot(dz{ii},fit_pred{ii},'-r')
+    end
+    ylim(dSA_minmax)
+    xlim(zlims)
+    
+%     title([num2str(round(tilt(ii))),'/',num2str(round(tip(ii)))]);
+end
+pp = gcf;
+pubgraph(pp);
+exportgraphics(pp,[printdir,'manyIntDatum.eps'],'ContentType','vector');
 
 %%
 tilt = [output_list.tilt]';
@@ -119,8 +169,9 @@ FWHM_interp = f(TILT,TIP);
 contour_levels = round(min(FWHM),-1):10:round(max(FWHM),-1);
 
 hh = figure(2);
+set(gcf,'Position',[840         180        1058         977]);
 hold on
-contour3(TILT,TIP,FWHM_interp,contour_levels,'k','ShowText','on')
+contour3(TILT,TIP,FWHM_interp,contour_levels,'k','ShowText','off')
 scatter3(tilt,tip,FWHM,'r')
 scatter3(tilt(I),tip(I),FWHM(I),'filled','blue')
 % quiver(TILT,TIP,FX,FY)
@@ -130,9 +181,11 @@ xlabel('TILT')
 ylabel('TIP')
 % view([90 -90])
 title({figtitle; ['Best FWHM = ',num2str(round(FWHM(I),2)),' µm [',num2str(round(tilt(I),1)),'/',num2str(round(tip(I),1)),']']})
+pbaspect([1 1 1])
 pubgraph(hh)
 
-print([printdir,'multiContourGrid.png'],'-dpng')
+% print([printdir,'multiContourGrid.png'],'-dpng')
+exportgraphics(hh,[printdir,'multiContourGrid.eps'],'ContentType','vector');
 %%
 % close all
 

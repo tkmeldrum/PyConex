@@ -98,10 +98,10 @@ end
 %%
 nRows = numel(append);
 nCols = numel(output_list)/nRows;
-FWHM = reshape(FWHM,nCols,nRows);
+FWHMb = reshape(FWHM,nCols,nRows);
 int_minmax = [min(min([int_smoothed{:}])) max(max([int_smoothed{:}]))];
 dSA_minmax = [min(min([dSA_smoothed{:}])) max(max([dSA_smoothed{:}]))];
-[~,I] = min(FWHM);
+[~,I] = min(FWHMb);
 I = I + nCols*(0:numel(I)-1);
 zlims = [-100 100];
 %%
@@ -153,7 +153,7 @@ tiplin = linspace(tip_min(1),tip_max(1),100);
 [TILT,TIP] = meshgrid(tiltlin,tiplin);
 % The key to this process is to use scatteredInterpolant to interpolate the values of the function at the uniformly spaced points, based on the values of the function at the original data points (which are random in this example). This statement uses the default linear interpolation to generate the new data:
 
-f = scatteredInterpolant(tilt,tip,FWHM);
+f = scatteredInterpolant(tilt,tip,FWHM');
 
 f.Method = 'natural';
 
@@ -189,7 +189,7 @@ exportgraphics(hh,[printdir,'multiContourGrid.eps'],'ContentType','vector');
 %%
 % close all
 
-gg = figure(1);
+gg = figure(7);
 hold on
 surf(TILT,TIP,FWHM_interp)
 scatter3(tilt,tip,FWHM+10,'r')
@@ -203,4 +203,4 @@ shading interp
 title(figtitle)
 pubgraph(gg)
 
-print([printdir,'multiSurfGrid.png'],'-dpng')
+% print([printdir,'multiSurfGrid.png'],'-dpng')

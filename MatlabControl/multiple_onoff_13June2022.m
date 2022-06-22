@@ -26,17 +26,20 @@ hh = figure(1);
 set(gcf,'Position',[1 1 560  800])
 subplot(2,1,2)
 hold on
-for ii = 1:ON.nDir
-    contour(ON.z_vec,ON.tauh,squeeze(ON.spectrum(:,:,ii)),10,'red','LineWidth',0.5)
-end
+% for ii = 1:ON.nDir
+%     contour(ON.z_vec,ON.tauh,squeeze(ON.spectrum(:,:,ii)),10,'red','LineWidth',0.5)
+% end
 % plot(ON.z_vec,ON.MLT2,':r','LineWidth',1)
-plot(ON.z_vec,ON.meanMLT2,'-r','LineWidth',2)
+contour(ON.z_vec,ON.tauh,ON.meanspectrum,20,'red','LineWidth',0.5)
+% plot(ON.z_vec,ON.meanMLT2,'-r','LineWidth',2)
 
-for ii = 1:OFF.nDir
-    contour(OFF.z_vec,OFF.tauh,squeeze(OFF.spectrum(:,:,ii)),10,'black','LineWidth',0.5)
-end
+
+% for ii = 1:OFF.nDir
+%     contour(OFF.z_vec,OFF.tauh,squeeze(OFF.spectrum(:,:,ii)),10,'black','LineWidth',0.5)
+% end
 % plot(OFF.z_vec,OFF.MLT2,':k','LineWidth',1)
-plot(OFF.z_vec,OFF.meanMLT2,'-k','LineWidth',2)
+contour(OFF.z_vec,OFF.tauh,OFF.meanspectrum,20,'black','LineWidth',0.5)
+% plot(OFF.z_vec,OFF.meanMLT2,'-k','LineWidth',2)
 
 % for ii = 1:REV.nDir
 %     contour(REV.z_vec,REV.tauh,squeeze(REV.spectrum(:,:,ii)),5,'blue','LineWidth',0.5)
@@ -74,7 +77,7 @@ xlim(ON.params.zlims)
 ylabel('signal intensity [arb]')
 pubgraph(hh)
 
-print([maindir,'ONOFFILTcomp.png'],'-dpng');
+% print([maindir,'ONOFFILTcomp.png'],'-dpng');
 
 %%
 close all

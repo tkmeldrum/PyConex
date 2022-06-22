@@ -15,11 +15,11 @@ ON = runmultipleonoff_tilttip(dirname,params,T2kernel);
 dirname = [maindir,'OFF/'];
 OFF = runmultipleonoff_tilttip(dirname,params,T2kernel);
 
-dirname = [maindir,'REV/'];
-REV = runmultipleonoff_tilttip(dirname,params,T2kernel);
-
-dirname = [maindir,'BAD/'];
-BAD = runmultipleonoff_tilttip(dirname,params,T2kernel);
+% dirname = [maindir,'REV/'];
+% REV = runmultipleonoff_tilttip(dirname,params,T2kernel);
+% 
+% dirname = [maindir,'BAD/'];
+% BAD = runmultipleonoff_tilttip(dirname,params,T2kernel);
 
 %%
 hh = figure(1);
@@ -78,6 +78,53 @@ ylabel('signal intensity [arb]')
 pubgraph(hh)
 
 % print([maindir,'ONOFFILTcomp.png'],'-dpng');
+
+%%
+ll= figure(3);
+% subplot(2,1,1)
+yyaxis left
+hold on
+plot(ON.z_vec,ON.meanmonoexp.A,'-k')
+plot(ON.z_vec,ON.meanmonoexp.A+ON.meanmonoexp.Aci,':k')
+plot(ON.z_vec,ON.meanmonoexp.A-ON.meanmonoexp.Aci,':k')
+
+plot(OFF.z_vec,OFF.meanmonoexp.A,'-g')
+plot(OFF.z_vec,OFF.meanmonoexp.A+OFF.meanmonoexp.Aci,':g')
+plot(OFF.z_vec,OFF.meanmonoexp.A-OFF.meanmonoexp.Aci,':g')
+
+ylim([-0.1 1.1])
+
+yyaxis right
+hold on
+plot(ON.z_vec,ON.meanmonoexp.T2,'-r')
+plot(ON.z_vec,ON.meanmonoexp.T2+ON.meanmonoexp.T2ci,':r')
+plot(ON.z_vec,ON.meanmonoexp.T2-ON.meanmonoexp.T2ci,':r')
+
+plot(OFF.z_vec,OFF.meanmonoexp.T2,'-b')
+plot(OFF.z_vec,OFF.meanmonoexp.T2+OFF.meanmonoexp.T2ci,':b')
+plot(OFF.z_vec,OFF.meanmonoexp.T2-OFF.meanmonoexp.T2ci,':b')
+ylim([1e-4 1e0])
+set(gca,'YScale','log')
+
+% subplot(2,1,2)
+% yyaxis left
+% hold on
+% plot(ON.z_vec,ON.meanbiexp.A,'-k')
+% plot(ON.z_vec,ON.meanbiexp.A+ON.meanbiexp.Aci,':k')
+% plot(ON.z_vec,ON.meanbiexp.A-ON.meanbiexp.Aci,':k')
+% ylim([-0.5 1.5])
+% 
+% yyaxis right
+% hold on
+% plot(ON.z_vec,ON.meanbiexp.T21,'-r')
+% plot(ON.z_vec,ON.meanbiexp.T21+ON.meanbiexp.T21ci,':r')
+% plot(ON.z_vec,ON.meanbiexp.T21-ON.meanbiexp.T21ci,':r')
+% 
+% plot(ON.z_vec,ON.meanbiexp.T22,'-b')
+% plot(ON.z_vec,ON.meanbiexp.T22+ON.meanbiexp.T22ci,':b')
+% plot(ON.z_vec,ON.meanbiexp.T22-ON.meanbiexp.T22ci,':b')
+% ylim([1e-4 1e4])
+% set(gca,'YScale','log')
 
 %%
 close all

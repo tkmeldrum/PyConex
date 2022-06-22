@@ -81,9 +81,45 @@ data.meanMLT2 = 10.^mean(log10(data.MLT2),2,'omitnan');
 if data.nDir > 1
     data.meantimedata = mean(data.timedata,3);
     [~,data.meanspatialdata] = echoFT(data.params,data.meantimedata);
+        
     for ii = 1:range(data.params.z_ind)+1
         [data.meanspectrum(:,ii)]=upnnlsmooth1D(abs(data.meanspatialdata(ii+data.params.z_ind(1)-1,:)'),data.echoVec',...
             data.params.T2_minmax(1),data.params.T2_minmax(2),data.params.alpha,-1,min(data.params.T2_steps,data.params.nrEchoes),T2kernel);
+        
+         [xData, yData] = prepareCurveData( data.echoVec, abs(data.meanspatialdata(ii+data.params.z_ind(1)-1,:)) );
+         if ii>1
+             monoopts.StartPoint = aa;
+             biopts.StartPoint = bb;
+         end
+          try
+            [monofitresult, monogof] = fit( xData, yData, ft_mono, monoopts );
+            [bifitresult, bigof] = fit( xData, yData, ft_bi, biopts );
+            
+            aa = coeffvalues(monofitresult);
+            ci = range(confint(monofitresult))/2;
+            data.meanmonoexp.A(ii) = aa(1);
+            data.meanmonoexp.Aci(ii) = ci(1);
+            data.meanmonoexp.T2(ii) = aa(2);
+            data.meanmonoexp.T2ci(ii) = ci(2);
+            data.meanmonoexp.y0(ii) = aa(3);
+            data.meanmonoexp.y0ci(ii) = ci(3);
+            data.meanmonoexp.rmse(ii) = monogof.rmse;
+            
+            bb = coeffvalues(bifitresult);
+            ci = range(confint(bifitresult))/2;
+            data.meanbiexp.A(ii) = bb(1);
+            data.meanbiexp.Aci(ii) = ci(1);
+            data.meanbiexp.T21(ii) = bb(2);
+            data.meanbiexp.T21ci(ii) = ci(2);
+            data.meanbiexp.T22(ii) = bb(3);
+            data.meanbiexp.T22ci(ii) = ci(3);
+            data.meanbiexp.a(ii) = bb(4);
+            data.meanbiexp.aci(ii) = ci(4);
+            data.meanbiexp.y0(ii) = bb(5);
+            data.meanbiexp.y0ci(ii) = ci(5);
+            data.meanbiexp.rmse(ii) = bigof.rmse;
+          end
+        
     end
 end
 

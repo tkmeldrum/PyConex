@@ -2,7 +2,7 @@ clear
 clc
 close all
 
-params.zf = 2;
+params.zf = 0;
 params.gamma = 42.577; %MHz/T
 params.G = 23.87; %T/m
 T2kernel = 'exp(-h/T)';
@@ -15,9 +15,9 @@ ON = runmultipleonoff_tilttip(dirname,params,T2kernel);
 dirname = [maindir,'OFF/'];
 OFF = runmultipleonoff_tilttip(dirname,params,T2kernel);
 
-% dirname = [maindir,'REV/'];
-% REV = runmultipleonoff_tilttip(dirname,params,T2kernel);
-% 
+dirname = [maindir,'REV/'];
+REV = runmultipleonoff_tilttip(dirname,params,T2kernel);
+
 % dirname = [maindir,'BAD/'];
 % BAD = runmultipleonoff_tilttip(dirname,params,T2kernel);
 
@@ -80,51 +80,84 @@ pubgraph(hh)
 % print([maindir,'ONOFFILTcomp.png'],'-dpng');
 
 %%
+close all
+xlimits = [-50 25];
 ll= figure(3);
-% subplot(2,1,1)
-yyaxis left
+subplot(2,2,1)
+% yyaxis left
 hold on
-plot(ON.z_vec,ON.meanmonoexp.A,'-k')
-plot(ON.z_vec,ON.meanmonoexp.A+ON.meanmonoexp.Aci,':k')
-plot(ON.z_vec,ON.meanmonoexp.A-ON.meanmonoexp.Aci,':k')
+plot(ON.z_vec,ON.meanmonoexp.A,'-r')
+plot(ON.z_vec,ON.meanmonoexp.A+ON.meanmonoexp.Aci,':r')
+plot(ON.z_vec,ON.meanmonoexp.A-ON.meanmonoexp.Aci,':r')
 
-plot(OFF.z_vec,OFF.meanmonoexp.A,'-g')
-plot(OFF.z_vec,OFF.meanmonoexp.A+OFF.meanmonoexp.Aci,':g')
-plot(OFF.z_vec,OFF.meanmonoexp.A-OFF.meanmonoexp.Aci,':g')
+plot(OFF.z_vec,OFF.meanmonoexp.A,'-k')
+plot(OFF.z_vec,OFF.meanmonoexp.A+OFF.meanmonoexp.Aci,':k')
+plot(OFF.z_vec,OFF.meanmonoexp.A-OFF.meanmonoexp.Aci,':k')
 
+plot(REV.z_vec,REV.meanmonoexp.A,'-b')
+plot(REV.z_vec,REV.meanmonoexp.A+REV.meanmonoexp.Aci,':b')
+plot(REV.z_vec,REV.meanmonoexp.A-REV.meanmonoexp.Aci,':b')
+xlim(xlimits)
 ylim([-0.1 1.1])
+ylabel('fitted signal intensity [arb]')
 
-yyaxis right
+subplot(2,2,3)
+hold on
+plot(ON.z_vec(2:end),diff(ON.meanmonoexp.A)./diff(ON.z_vec)','-r')
+% plot(ON.z_vec,ON.meanmonoexp.T2+ON.meanmonoexp.T2ci,':r')
+% plot(ON.z_vec,ON.meanmonoexp.T2-ON.meanmonoexp.T2ci,':r')
+
+plot(OFF.z_vec(2:end),diff(OFF.meanmonoexp.A)./diff(OFF.z_vec)','-k')
+% plot(OFF.z_vec,OFF.meanmonoexp.T2+OFF.meanmonoexp.T2ci,':k')
+% plot(OFF.z_vec,OFF.meanmonoexp.T2-OFF.meanmonoexp.T2ci,':k')
+
+plot(REV.z_vec(2:end),diff(REV.meanmonoexp.A)./diff(REV.z_vec)','-b')
+% plot(REV.z_vec,REV.meanmonoexp.T2+REV.meanmonoexp.T2ci,':b')
+% plot(REV.z_vec,REV.meanmonoexp.T2-REV.meanmonoexp.T2ci,':b')
+xlim(xlimits)
+xlabel('position [µm]')
+ylabel('dA/dz [1/µm]')
+ylim([-0.1 0.05])
+
+
+subplot(2,2,2)
 hold on
 plot(ON.z_vec,ON.meanmonoexp.T2,'-r')
 plot(ON.z_vec,ON.meanmonoexp.T2+ON.meanmonoexp.T2ci,':r')
 plot(ON.z_vec,ON.meanmonoexp.T2-ON.meanmonoexp.T2ci,':r')
 
-plot(OFF.z_vec,OFF.meanmonoexp.T2,'-b')
-plot(OFF.z_vec,OFF.meanmonoexp.T2+OFF.meanmonoexp.T2ci,':b')
-plot(OFF.z_vec,OFF.meanmonoexp.T2-OFF.meanmonoexp.T2ci,':b')
-ylim([1e-4 1e0])
-set(gca,'YScale','log')
+plot(OFF.z_vec,OFF.meanmonoexp.T2,'-k')
+plot(OFF.z_vec,OFF.meanmonoexp.T2+OFF.meanmonoexp.T2ci,':k')
+plot(OFF.z_vec,OFF.meanmonoexp.T2-OFF.meanmonoexp.T2ci,':k')
 
-% subplot(2,1,2)
-% yyaxis left
-% hold on
-% plot(ON.z_vec,ON.meanbiexp.A,'-k')
-% plot(ON.z_vec,ON.meanbiexp.A+ON.meanbiexp.Aci,':k')
-% plot(ON.z_vec,ON.meanbiexp.A-ON.meanbiexp.Aci,':k')
-% ylim([-0.5 1.5])
-% 
-% yyaxis right
-% hold on
-% plot(ON.z_vec,ON.meanbiexp.T21,'-r')
-% plot(ON.z_vec,ON.meanbiexp.T21+ON.meanbiexp.T21ci,':r')
-% plot(ON.z_vec,ON.meanbiexp.T21-ON.meanbiexp.T21ci,':r')
-% 
-% plot(ON.z_vec,ON.meanbiexp.T22,'-b')
-% plot(ON.z_vec,ON.meanbiexp.T22+ON.meanbiexp.T22ci,':b')
-% plot(ON.z_vec,ON.meanbiexp.T22-ON.meanbiexp.T22ci,':b')
-% ylim([1e-4 1e4])
+plot(REV.z_vec,REV.meanmonoexp.T2,'-b')
+plot(REV.z_vec,REV.meanmonoexp.T2+REV.meanmonoexp.T2ci,':b')
+plot(REV.z_vec,REV.meanmonoexp.T2-REV.meanmonoexp.T2ci,':b')
+xlim(xlimits)
+xlabel('position [µm]')
+ylabel('T2 [s]')
+ylim([0 0.05])
 % set(gca,'YScale','log')
+
+subplot(2,2,4)
+hold on
+plot(ON.z_vec(2:end),diff(ON.meanmonoexp.T2)./diff(ON.z_vec)','-r')
+% plot(ON.z_vec,ON.meanmonoexp.T2+ON.meanmonoexp.T2ci,':r')
+% plot(ON.z_vec,ON.meanmonoexp.T2-ON.meanmonoexp.T2ci,':r')
+
+plot(OFF.z_vec(2:end),diff(OFF.meanmonoexp.T2)./diff(OFF.z_vec)','-k')
+% plot(OFF.z_vec,OFF.meanmonoexp.T2+OFF.meanmonoexp.T2ci,':k')
+% plot(OFF.z_vec,OFF.meanmonoexp.T2-OFF.meanmonoexp.T2ci,':k')
+
+plot(REV.z_vec(2:end),diff(REV.meanmonoexp.T2)./diff(REV.z_vec)','-b')
+% plot(REV.z_vec,REV.meanmonoexp.T2+REV.meanmonoexp.T2ci,':b')
+% plot(REV.z_vec,REV.meanmonoexp.T2-REV.meanmonoexp.T2ci,':b')
+xlim(xlimits)
+xlabel('position [µm]')
+ylabel('dT2/dz [s/µm]')
+ylim([-0.01 0.01])
+% set(gca,'YScale','log')
+pubgraph(ll)
 
 %%
 close all

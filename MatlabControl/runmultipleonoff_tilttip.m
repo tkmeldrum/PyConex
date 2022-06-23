@@ -23,11 +23,13 @@ ft_mono = fittype( 'A*(exp(-x/T2))+y0', 'independent', 'x', 'dependent', 'y' );
 ft_bi = fittype( 'A*(a*exp(-x/T21) + (1-a)*exp(-x/T22))+y0', 'independent', 'x', 'dependent', 'y' );
 monoopts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 monoopts.Display = 'Off';
+monoopts.Robust = 'Bisquare';
 monoopts.Lower = [-Inf 0 -Inf];
 monoopts.StartPoint = [0.6 0.03 0.15];
 
 biopts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 biopts.Display = 'Off';
+biopts.Robust = 'Bisquare';
 biopts.Lower = [-Inf -Inf -Inf 0 0];
 biopts.StartPoint = [0.85 0.01 0.1 1 0];
 biopts.Upper = [Inf Inf Inf 1 Inf];

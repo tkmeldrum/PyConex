@@ -30,8 +30,8 @@ monoopts.StartPoint = [0.6 0.03 0.15];
 biopts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 biopts.Display = 'Off';
 biopts.Robust = 'Bisquare';
-biopts.Lower = [-Inf -Inf -Inf 0 0];
-biopts.StartPoint = [0.85 0.01 0.1 1 0];
+biopts.Lower = [0 0 0 0 -Inf];
+biopts.StartPoint = [0.75 0.01 0.1 0.8 0];
 biopts.Upper = [Inf Inf Inf 1 Inf];
 
 %%
@@ -61,12 +61,23 @@ for jj = 1:data.nDir
             ci = range(confint(bifitresult))/2;
             data.biexp.A(ii,jj) = bb(1);
             data.biexp.Aci(ii,jj) = ci(1);
-            data.biexp.T21(ii,jj) = bb(2);
-            data.biexp.T21ci(ii,jj) = ci(2);
-            data.biexp.T22(ii,jj) = bb(3);
-            data.biexp.T22ci(ii,jj) = ci(3);
-            data.biexp.a(ii,jj) = bb(4);
-            data.biexp.aci(ii,jj) = ci(4);
+
+            if bb(2)>bb(3)
+                data.biexp.T21(ii,jj) = bb(2);
+                data.biexp.T21ci(ii,jj) = ci(2);
+                data.biexp.T22(ii,jj) = bb(3);
+                data.biexp.T22ci(ii,jj) = ci(3);
+                data.biexp.a(ii,jj) = bb(4);
+                data.biexp.aci(ii,jj) = ci(4);
+            else
+                data.biexp.T21(ii,jj) = bb(3);
+                data.biexp.T21ci(ii,jj) = ci(3);
+                data.biexp.T22(ii,jj) = bb(2);
+                data.biexp.T22ci(ii,jj) = ci(2);
+                data.biexp.a(ii,jj) = 1-bb(4);
+                data.biexp.aci(ii,jj) = ci(4);
+                
+            end
             data.biexp.y0(ii,jj) = bb(5);
             data.biexp.y0ci(ii,jj) = ci(5);
             data.biexp.rmse(ii,jj) = bigof.rmse;

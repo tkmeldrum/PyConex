@@ -10,12 +10,12 @@ close all
 %% user defined parameters
 topparams.gamma = 42.577;
 topparams.G = 23.87;
-topparams.zf = 0;
+topparams.zf = 2;
 
-basedir = '/Volumes/acstore-groups/ISC1026/Data/TKM/PM5/June2022/TiltTip/HotGlue/Octree';
-printdir = '/Volumes/acstore-groups/ISC1026/Data/TKM/PM5/June2022/TiltTip/HotGlue/';
-figtitle = 'HotGlue, OctreeA2-D';
-append = {'A2';'B';'C';'D'};
+basedir = '/Volumes/acstore-groups/ISC1026/Data/TKM/PM5/June2022/TiltTip/Epoxy31/Octree';
+printdir = '/Volumes/acstore-groups/ISC1026/Data/TKM/PM5/June2022/TiltTip/Epoxy31/';
+figtitle = 'MX960, OctreeA-D';
+append = {'A';'B';'C';'D'};
 for ii = 1:numel(append)
     dirlist{ii} = [basedir append{ii} filesep];
 end
@@ -76,7 +76,7 @@ for ii = 1:numel(output_list)
     int_spatial{ii} = abs(squeeze(sum(spatialdata{ii},2)));
     dSA{ii} = diff(int_spatial{ii})./diff(z{ii}');
     
-    int_smoothed{ii} = smoothdata(int_spatial{ii},'gaussian',round(size(int_spatial{ii},1)/10));
+    int_smoothed{ii} = smoothdata(int_spatial{ii},'gaussian',round(size(int_spatial{ii},1)/100));
     dSA_smoothed{ii} = diff(int_smoothed{ii})./diff(z{ii}');
     
     dz{ii} = z{ii}(2:end)'-(z{ii}(2)-z{ii}(1))/2;

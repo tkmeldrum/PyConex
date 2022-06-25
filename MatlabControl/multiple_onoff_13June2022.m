@@ -7,7 +7,7 @@ params.gamma = 42.577; %MHz/T
 params.G = 23.87; %T/m
 T2kernel = 'exp(-h/T)';
 
-maindir = '/Volumes/acstore-groups/ISC1026/Data/TKM/PM5/June2022/TiltTip/Epoxy31/CPMG_ONOFFBAD1/';
+maindir = 'Z:\Data\TKM\PM5\June2022\TiltTip\Epoxy31\CPMG_ONOFFBAD2\';
 
 dirname = [maindir,'ON/'];
 ON = runmultipleonoff_tilttip(dirname,params,T2kernel);

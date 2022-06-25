@@ -13,11 +13,11 @@ close all
 % user defined parameters
 actuator_lims = [0 12];
 
-tilts = 0; %linspace(-260,300,15); %um
+tilts = linspace(-260,300,15); %um
 tips =  0; %linspace(-260,300,15); %um
-centroids = linspace(0,3,31) %6.65; %mm
+centroids = 7.35; %6.65; %mm
 
-filedir = 'Z:\Data\TKM\PM5\Mar2022\RubberBlock\CPMG_Series\';
+filedir = 'Z:\Data\TKM\PM5\June2022\ABS\CPMG_Series\';
 
 positions = make_positions_mesh(tilts,tips,centroids);
 

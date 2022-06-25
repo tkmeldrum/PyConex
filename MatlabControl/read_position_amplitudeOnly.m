@@ -24,11 +24,11 @@ topparams.actuator_lims = [0 12];
 % [output_positions_filename,filedir] = uigetfile('*.txt');
 
 output_positions_filename = 'output_positions.txt';
-filedir = 'Z:\Data\TKM\PM5\June2022\TiltTip\Epoxy31\OctreeD\';
-writedir2 = 'Z:\Data\TKM\PM5\June2022\TiltTip\Epoxy31\OctreeE\';
+filedir = 'Z:\Data\TKM\PM5\June2022\ABS\TiltTipHotGlue\OctreeA2\';
+writedir2 = 'Z:\Data\TKM\PM5\June2022\ABS\TiltTipHotGlue\OctreeB\';
 
 % filedir = '/Volumes/ISC1026/Data/TKM/PM5/June2021/TipTilt/Sample249_auto/CPMG_series2/';
-main_title = '4.78 mm Epoxy 31 D';
+main_title = '7.975 mm ABSonly A2';
 showfigs = 0;
 calc_next_octree = 0;
 write_best_pos_info =0;
@@ -91,7 +91,7 @@ params.actuator_lims = topparams.actuator_lims;
 %% get just signal intensity vs z, smooth, and get d(S)/dz
 
 int_spatial = abs(squeeze(sum(spatialdata,2)));
-int_smoothed = smoothdata(int_spatial,'gaussian',round(size(int_spatial,1)/50));
+int_smoothed = smoothdata(int_spatial,'gaussian',round(size(int_spatial,1)/25));
 dSA_smoothed = diff(int_smoothed)./diff(z');
 dSA = diff(int_spatial)./diff(z');
 dz = z(2:end)'-(z(2)-z(1))/2;
@@ -99,7 +99,7 @@ dz = z(2:end)'-(z(2)-z(1))/2;
 %% fit derivative to gaussian for FWHM
 
 % Set up fittype and options.
-ft = fittype( '-a*exp(-(x-c)^2/(2*s^2))', 'independent', 'x', 'dependent', 'y' );
+ft = fittype( 'a*exp(-(x-c)^2/(2*s^2))', 'independent', 'x', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Display = 'Off';
 opts.StartPoint = [0.1 0 10];
@@ -185,5 +185,5 @@ save([filedir,'processed_position_data_',datestr(now,'ddmmmyyyy'),'.mat']);
 
 %%
 % best_dSA_pos = 5;
-[next_positions, next_abs_pos] = make_next_octree(positions_data(best_dSA_pos,:),tilts,tips,params,writedir2);
+% [next_positions, next_abs_pos] = make_next_octree(positions_data(best_dSA_pos,:),tilts,tips,params,writedir2);
 

@@ -13,7 +13,7 @@ close all
 %% user defined parameters
 topparams.gamma = 42.577;
 topparams.G = 23.87; 
-topparams.zf = 4;
+topparams.zf = 1;
 % topparams.ILTminmax = [1e-5 1e-1];
 % topparams.nrILTSteps = 200;
 % topparams.alpha = 1e7;
@@ -24,11 +24,11 @@ topparams.actuator_lims = [0 12];
 % [output_positions_filename,filedir] = uigetfile('*.txt');
 
 output_positions_filename = 'output_positions.txt';
-filedir = 'Z:\Data\TKM\PM5\June2022\ABS\TiltTipHotGlue\OctreeA2\';
-writedir2 = 'Z:\Data\TKM\PM5\June2022\ABS\TiltTipHotGlue\OctreeB\';
+filedir = 'Z:\Data\TKM\PM5\June2022\ABS\TiltTipHotGlue\OctreeC\';
+writedir2 = 'Z:\Data\TKM\PM5\June2022\ABS\TiltTipHotGlue\OctreeD\';
 
 % filedir = '/Volumes/ISC1026/Data/TKM/PM5/June2021/TipTilt/Sample249_auto/CPMG_series2/';
-main_title = '7.975 mm ABSonly A2';
+main_title = '7.975 mm ABSonly C';
 showfigs = 0;
 calc_next_octree = 0;
 write_best_pos_info =0;
@@ -99,11 +99,11 @@ dz = z(2:end)'-(z(2)-z(1))/2;
 %% fit derivative to gaussian for FWHM
 
 % Set up fittype and options.
-ft = fittype( 'a*exp(-(x-c)^2/(2*s^2))', 'independent', 'x', 'dependent', 'y' );
-opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
-opts.Display = 'Off';
-opts.StartPoint = [0.1 0 10];
-opts.Lower = [0 -Inf 0];
+ft_gaussian = fittype( 'a*exp(-(x-c)^2/(2*s^2))', 'independent', 'x', 'dependent', 'y' );
+optsGaussian = fitoptions( 'Method', 'NonlinearLeastSquares' );
+optsGaussian.Display = 'Off';
+optsGaussian.StartPoint = [0.1 0 10];
+optsGaussian.Lower = [0 -Inf 0];
     
     
 for ii = 1:nPos_in
@@ -111,9 +111,9 @@ for ii = 1:nPos_in
     [xData, yData] = prepareCurveData( dz, dSA_smoothed(:,ii) );
     
     [C,I] = min(dSA_smoothed(:,ii));
-    opts.StartPoint = [-C dz(I) 10];
+    optsGaussian.StartPoint = [-C dz(I) 10];
     % Fit model to data.
-    [mdl{ii}, gof{ii}] = fit( xData, yData, ft, opts );
+    [mdl{ii}, gof{ii}] = fit( xData, yData, ft_gaussian, optsGaussian );
     fitvals(:,ii) = coeffvalues(mdl{ii})';
     fit_pred(:,ii) = feval(mdl{ii},dz);
 %     FWHM(ii) = 2*sqrt(2*log(2))*aa(3);
@@ -184,6 +184,6 @@ end
 save([filedir,'processed_position_data_',datestr(now,'ddmmmyyyy'),'.mat']);
 
 %%
-% best_dSA_pos = 5;
-% [next_positions, next_abs_pos] = make_next_octree(positions_data(best_dSA_pos,:),tilts,tips,params,writedir2);
+best_dSA_pos = 3;
+[next_positions, next_abs_pos] = make_next_octree(positions_data(best_dSA_pos,:),tilts,tips,params,writedir2);
 

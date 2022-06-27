@@ -51,8 +51,60 @@ for jj = 1:9
 %         biexp.rmse(ii,jj) = bigof.rmse;
     end
 end
+
+
+%%
+T2_spatial = log10(monoexp.T2);
+T2_smoothed = smoothdata(T2_spatial,'gaussian',round(size(T2_spatial,1)/10));
+dT2_smoothed = diff(T2_smoothed)./diff(z_vec);
+dT2 = diff(T2_spatial)./diff(z_vec);
+dz_vec = z_vec(2:end)-(z_vec(2)-z_vec(1))/2;    
+optsGaussian.Lower = [0 min(z_vec) 0];
+optsGaussian.Upper = [Inf max(z_vec) range(z_vec)];
+    
+for ii = 1:nPos_in
+    
+    [xData, yData] = prepareCurveData( dz_vec, dT2_smoothed(:,ii) );
+    
+    [C,I] = max(dT2_smoothed(:,ii));
+    optsGaussian.StartPoint = [C 0 10];
+    % Fit model to data.
+    [T2mdl{ii}, T2gof{ii}] = fit( xData, yData, ft_gaussian, optsGaussian );
+    T2fitvals(:,ii) = coeffvalues(T2mdl{ii})';
+    T2fit_pred(:,ii) = feval(T2mdl{ii},dz_vec);
+%     FWHM(ii) = 2*sqrt(2*log(2))*aa(3);
+end
+
+
+oo = figure(7);
+for ii = 1:nPos_in
+    subplot(rowsout, colsout,ii)
+    hold on
+%     plot(z_vec,T2_smoothed(:,ii))
+    plot(dz_vec,dT2_smoothed(:,ii))
+    plot(dz_vec,T2fit_pred(:,ii),'-r')
+%     ylim([min(min(dT2_smoothed)) 1e-1])
+%     set(gca,'YScale','log')
+    title(num2str(ii))
+end
+
+qq = figure(8);
+for ii = 1:nPos_in
+    subplot(rowsout, colsout,ii)
+    hold on
+    plot(z_vec,T2_smoothed(:,ii))
+%     plot(dz,fit_pred(:,ii),'-r')
+    ylim([min(min(T2_smoothed)) max(max(T2_smoothed))])
+    title(num2str(ii))
+end
+
+
+%%
+save([filedir,'processed_position_data_',datestr(now,'ddmmmyyyy'),'.mat']);
 %%
 
+load('Z:\Data\TKM\PM5\June2022\ABS\TiltTipHotGlue\OctreeA2\processed_position_data_25Jun2022.mat');
+%%
 close all
 
 % ppp = figure(4);
